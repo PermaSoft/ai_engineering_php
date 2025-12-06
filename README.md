@@ -39,6 +39,17 @@ The current project is the Symfony's official demo application, and I added pack
   To avoid context pollution, thins that are not always needed can be referenced from claude.md, detailled in an other file, so in following prompt, you may read them only on demand, like partial disclosure pattern.
 ```
 
+After building technical guidance and functionnal documentation, I have erased all code.
+Time has come to try to reproduce the whole application.
+
+I started with that prompt:
+```prompt-claude
+based on memory files, you have functionnal description and technical guidelines to rebuild a full application.
+  The process should start with a research of every functionnality you need to build and produce a plan for each of them that point to all needed data and only needed data.
+  Then for each plan, produce a checklist of every thing you need to produce (doc, tests, code, etc.).
+  between research and each plans, you ust be able to reset the context and continue with the next plan file. 
+```
+
 
 ---
 

@@ -27,7 +27,7 @@ Documentation is organized following the partial disclosure pattern - the master
 
 ## Usage
 
-When working on this project:
+When working on this project
 1. Consult the **Packmind Standards** above for coding rules and best practices
 2. Reference the **Master Index** for application architecture and feature overview
 3. Dive into **detailed documentation** for specific component implementation details
