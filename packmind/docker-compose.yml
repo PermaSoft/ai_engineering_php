@@ -1,0 +1,140 @@
+# Production Docker Compose configuration
+# Uses pre-built images with secure secrets management
+
+# Packmind image configuration
+x-packmind-images: &packmind-images
+  PACKMIND_TAG: ${PACKMIND_TAG:-latest}
+
+# Port configuration
+x-frontend-port: &frontend-port
+  FRONTEND_PUBLIC_PORT: ${FRONTEND_PUBLIC_PORT:-8081}
+
+# Common environment variables
+x-database-url: &database-url
+  DATABASE_URL: postgres://postgres:postgres@packmind-postgres:5432/packmind
+
+x-redis-config: &redis-config
+  REDIS_URI: ${REDIS_URI:-redis://packmind-redis:6379}
+  # For authenticated Redis, set REDIS_URI like: redis://username:password@packmind-redis:6379
+
+x-openai-config: &openai-config
+  OPENAI_API_KEY: ${OPENAI_API_KEY:-} # Set via environment variable to enable calls to OpenAI
+
+# To enable custom CA certificates for Node.js applications:
+# 1. Create a ./certs/ directory next to this docker-compose.yml file
+# 2. Place your CA certificate(s) in PEM format as ./certs/ca-bundle.pem
+#    (combine multiple certificates: cat cert1.pem cert2.pem > ca-bundle.pem)
+# 3. Uncomment the certificate-related lines in the api and mcp-server services below
+
+services:
+  # Infrastructure services
+  postgres:
+    image: postgres:17.6-alpine3.21
+    container_name: packmind-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: packmind
+    ports:
+      - '5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.2.4-alpine
+    container_name: packmind-redis
+    ports:
+      - '6379'
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+  # Production application services
+  api:
+    image: packmind/api:${PACKMIND_TAG:-latest}
+    container_name: packmind-api
+    ports:
+      - '3000:3000'
+    environment:
+      <<: [*database-url, *redis-config, *openai-config]
+      COOKIE_SECURE: false # Set to true if exposed behind HTTPS
+      # Uncomment the next line to enable custom CA certificates:
+      # NODE_EXTRA_CA_CERTS: /ca-certs/ca-bundle.pem
+    # Uncomment the next 2 lines to mount custom CA certificates:
+    # volumes:
+    #   - ./certs/ca-bundle.pem:/ca-certs/ca-bundle.pem:ro
+    secrets:
+      - encryption_key
+      - api_jwt_secret_key
+      - mcp_jwt_secret_key
+    entrypoint: []
+    command:
+      - sh
+      - -c
+      - |
+        export ENCRYPTION_KEY="$(cat /run/secrets/encryption_key)"
+        export API_JWT_SECRET_KEY="$(cat /run/secrets/api_jwt_secret_key)"
+        export MCP_JWT_SECRET_KEY="$(cat /run/secrets/mcp_jwt_secret_key)"
+        cd migrations && node packages/migrations/src/runMigrationsDocker.js && cd ..
+        exec node main.js
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  mcp-server:
+    image: packmind/mcp:${PACKMIND_TAG:-latest}
+    container_name: packmind-mcp
+    ports:
+      - '3001:3001'
+    environment:
+      <<: [*database-url, *redis-config, *openai-config]
+      RATE_LIMIT_MAX_REQUESTS: 10000
+      # Uncomment the next line to enable custom CA certificates:
+      # NODE_EXTRA_CA_CERTS: /ca-certs/ca-bundle.pem
+    # Uncomment the next 2 lines to mount custom CA certificates:
+    # volumes:
+    #   - ./certs/ca-bundle.pem:/ca-certs/ca-bundle.pem:ro
+    secrets:
+      - encryption_key
+      - mcp_jwt_secret_key
+    entrypoint: []
+    command:
+      - sh
+      - -c
+      - |
+        export ENCRYPTION_KEY="$(cat /run/secrets/encryption_key)"
+        export MCP_JWT_SECRET_KEY="$(cat /run/secrets/mcp_jwt_secret_key)"
+        exec node main.js
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  frontend:
+    image: packmind/frontend:${PACKMIND_TAG:-latest}
+    container_name: packmind-frontend
+    ports:
+      - '${FRONTEND_PUBLIC_PORT:-8081}:80'
+    depends_on:
+      - api
+      - mcp-server
+    restart: unless-stopped
+
+# Secrets definition - files are read from the host filesystem
+secrets:
+  encryption_key:
+    file: ./secrets/encryption_key.txt
+  api_jwt_secret_key:
+    file: ./secrets/api_jwt_secret_key.txt
+  mcp_jwt_secret_key:
+    file: ./secrets/mcp_jwt_secret_key.txt
+
+volumes:
+  postgres-data:
+  redis-data:
+
+networks:
+  default:
+    name: packmind-network
