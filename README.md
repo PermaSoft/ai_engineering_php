@@ -11,6 +11,23 @@ We will:
 
 Here the original Symfony demo application's readme file:
 
+After installing claude and packmind, 
+I added context7 and packmind mcp servers in claude configuration.
+there were both active when I ran this prompt:
+
+```prompt-claude
+> I want separate standards for each area.
+All areas are equal in priority.
+I would like code examples form the current demo codebase, even if they should always be positive examples.
+These standards should be grouped in a symfony package
+> ```
+
+It gave me standards, no recipies, no package.
+I made a package named symfony in packmind UI.
+at the root folder of the project, I ran 
+```shell
+packmind-cli pull symfony
+```
 ---
 
 Symfony Demo Application
