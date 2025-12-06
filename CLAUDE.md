@@ -1,3 +1,41 @@
+# Application Architecture & Rebuild Documentation
+
+This project is the **Symfony Demo Application** - the official reference implementation demonstrating Symfony best practices. Complete documentation for understanding and rebuilding this application from scratch is available in the memory files.
+
+## Master Index
+
+For comprehensive documentation, start with the **[Symfony Demo App Master Index](./.claude/memory/symfony-demo-app-index.md)**
+
+This index provides:
+- High-level application overview
+- Quick reference for all features
+- Links to detailed documentation for each component
+- Rebuild workflow and step-by-step instructions
+
+## Detailed Documentation (Partial Disclosure Pattern)
+
+Documentation is organized following the partial disclosure pattern - the master index provides overview and context, with links to detailed specifications:
+
+- **[Domain Model](./.claude/memory/domain-model.md)** - Complete entity specifications, relationships, and validation rules
+- **[Security Architecture](./.claude/memory/security-architecture.md)** - Authentication, authorization, voters, and security patterns
+- **[Controllers & Routing](./.claude/memory/controllers-routing.md)** - Request handling, routing patterns, and controller implementation
+- **[Forms & Validation](./.claude/memory/forms-validation.md)** - Form types, custom fields, data transformers, and validation
+- **[Services & Repositories](./.claude/memory/services-repositories.md)** - Business logic, data access, events, and service patterns
+- **[Templates & Frontend](./.claude/memory/templates-frontend.md)** - Twig templates, asset management, and frontend structure
+- **[Testing Strategy](./.claude/memory/testing-strategy.md)** - Test organization, patterns, and coverage
+- **[Configuration & Setup](./.claude/memory/configuration-setup.md)** - Dependencies, environment setup, and deployment
+
+## Usage
+
+When working on this project:
+1. Consult the **Packmind Standards** above for coding rules and best practices
+2. Reference the **Master Index** for application architecture and feature overview
+3. Dive into **detailed documentation** for specific component implementation details
+
+This documentation enables full reconstruction of the application from scratch while maintaining consistency with Symfony best practices.
+
+---
+
 <!-- start: Packmind standards -->
 # Packmind Standards
 
@@ -115,3 +153,6 @@ Guidelines for writing effective tests in Symfony applications, including functi
 
 Full standard is available here for further request: [Symfony Testing Best Practices](.packmind/standards/symfony-testing-best-practices.md)
 <!-- end: Packmind standards -->
+
+---
+

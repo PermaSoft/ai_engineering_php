@@ -14,6 +14,10 @@ Here the original Symfony demo application's readme file:
 After installing claude and packmind, 
 I added context7 and packmind mcp servers in claude configuration.
 there were both active when I ran this prompt:
+```prompt-claude
+I need you to think hard on creating Packmind standards to enforce best pratices of symfony development as defined in their [official website](https://symfony.com/doc/current/best_practices.html) the menu on the left of
+  this site is a menu of links referencing all needed content. Note the actual directory is the content of the official symfony demo application implementing these best practices.
+```
 
 ```prompt-claude
 > I want separate standards for each area.
@@ -28,6 +32,14 @@ at the root folder of the project, I ran
 ```shell
 packmind-cli pull symfony
 ```
+
+```prompt-claude
+The current project is the Symfony's official demo application, and I added packmind standards on top of it.
+  But I need you to explore and analyse this project to update your memory files with everything you need to rebuild this application from scratch.
+  To avoid context pollution, thins that are not always needed can be referenced from claude.md, detailled in an other file, so in following prompt, you may read them only on demand, like partial disclosure pattern.
+```
+
+
 ---
 
 Symfony Demo Application
