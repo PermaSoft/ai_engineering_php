@@ -12,6 +12,7 @@ The Symfony Demo uses a comprehensive security system with:
 - CSRF protection on all sensitive forms
 - Remember-me functionality
 - Secure logout handling
+- Switch user (impersonation) for testing
 
 ## Security Configuration
 
@@ -83,6 +84,9 @@ security:
                 lifetime: 604800  # 1 week in seconds
                 path: /
                 always_remember_me: true
+
+            # Switch user functionality (login as another user)
+            switch_user: true
 ```
 
 **Key Features**:
@@ -90,6 +94,7 @@ security:
 - **CSRF protection**: Enabled on login form
 - **Remember me**: 1-week cookie duration
 - **Default redirect**: Blog index after login
+- **Switch user**: Admins can impersonate other users for testing
 
 ### Access Control Rules
 
@@ -503,6 +508,68 @@ if ($this->isGranted(PostVoter::EDIT, $post)) {
     // User can edit this post
 }
 ```
+
+## Switch User (Impersonation)
+
+The switch user feature allows administrators to impersonate other users for testing and debugging purposes.
+
+### Configuration
+
+**Location**: `config/packages/security.yaml`
+
+```yaml
+firewalls:
+    main:
+        switch_user: true
+```
+
+### Usage
+
+#### In Templates (User List)
+
+```twig
+<a href="{{ path('blog_index', {'_switch_user': user.username}) }}">
+    Login As {{ user.username }}
+</a>
+```
+
+#### Switch Back to Original User
+
+```twig
+<a href="{{ path('blog_index', {'_switch_user': '_exit'}) }}">
+    Exit Impersonation
+</a>
+```
+
+Or append `?_switch_user=_exit` to any URL.
+
+### Access Control
+
+By default, only users with `ROLE_ALLOWED_TO_SWITCH` can use this feature. With the role hierarchy (`ROLE_ADMIN: ROLE_USER`), admins automatically have this permission.
+
+### Implementation in Admin User Management
+
+**Location**: `templates/admin/user/index.html.twig`
+
+The user management page provides "Login As" links for each user (except the current user):
+
+```twig
+{% if app.user.id != user.id %}
+    <a href="{{ path('blog_index', {'_switch_user': user.username}) }}"
+       onclick="return confirm('Login as {{ user.username }}?')">
+        Login As
+    </a>
+{% else %}
+    <span>Current session</span>
+{% endif %}
+```
+
+### Security Considerations
+
+- Only admins can switch users
+- Useful for testing user-specific functionality
+- Demo and development feature (consider disabling in production)
+- Can be restricted with custom voters if needed
 
 ## Test User Credentials
 

@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'title.homepage'|trans({}, 'messages', app.request.locale)|default('Welcome') }}{% endblock %}
+
+{% block body %}
+    <div style="text-align: center; padding: 3rem 0;">
+        <h1 style="font-size: 3rem; margin-bottom: 1rem;">{{ 'title.symfony_demo'|trans({}, 'messages', app.request.locale)|default('Symfony Demo Application') }}</h1>
+        <p style="font-size: 1.25rem; color: #6c757d; margin-bottom: 3rem;">
+            {{ 'help.homepage_description'|trans({}, 'messages', app.request.locale)|default('Choose where you want to go') }}
+        </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+        {# Visitor Section - Blog #}
+        <div style="border: 1px solid #dee2e6; border-radius: 0.5rem; padding: 2rem; background: #f8f9fa;">
+            <h2 style="margin-bottom: 1rem;">{{ 'title.blog_section'|trans({}, 'messages', app.request.locale)|default('Blog') }}</h2>
+            <p style="color: #6c757d; margin-bottom: 1.5rem;">
+                {{ 'help.blog_section'|trans({}, 'messages', app.request.locale)|default('Browse and read blog posts') }}
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <a href="{{ path('blog_index') }}" style="display: block; padding: 0.75rem 1.5rem; background: #0d6efd; color: white; text-align: center; text-decoration: none; border-radius: 0.25rem;">
+                    {{ 'action.view_blog'|trans({}, 'messages', app.request.locale)|default('View Blog Posts') }}
+                </a>
+                <a href="{{ path('blog_search') }}" style="display: block; padding: 0.75rem 1.5rem; background: #6c757d; color: white; text-align: center; text-decoration: none; border-radius: 0.25rem;">
+                    {{ 'action.search_blog'|trans({}, 'messages', app.request.locale)|default('Search Posts') }}
+                </a>
+            </div>
+        </div>
+
+        {# Admin Section - User Management #}
+        {% if is_granted('ROLE_ADMIN') %}
+            <div style="border: 1px solid #dee2e6; border-radius: 0.5rem; padding: 2rem; background: #fff3cd;">
+                <h2 style="margin-bottom: 1rem;">{{ 'title.admin_section'|trans({}, 'messages', app.request.locale)|default('Administration') }}</h2>
+                <p style="color: #6c757d; margin-bottom: 1.5rem;">
+                    {{ 'help.admin_section'|trans({}, 'messages', app.request.locale)|default('Manage users and content') }}
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <a href="{{ path('admin_user_index') }}" style="display: block; padding: 0.75rem 1.5rem; background: #dc3545; color: white; text-align: center; text-decoration: none; border-radius: 0.25rem;">
+                        {{ 'action.manage_users'|trans({}, 'messages', app.request.locale)|default('Manage Users') }}
+                    </a>
+                    <a href="{{ path('admin_post_index')|default('#') }}" style="display: block; padding: 0.75rem 1.5rem; background: #fd7e14; color: white; text-align: center; text-decoration: none; border-radius: 0.25rem;">
+                        {{ 'action.manage_posts'|trans({}, 'messages', app.request.locale)|default('Manage Posts') }}
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div style="border: 1px solid #dee2e6; border-radius: 0.5rem; padding: 2rem; background: #e7f1ff;">
+                <h2 style="margin-bottom: 1rem;">{{ 'title.login_section'|trans({}, 'messages', app.request.locale)|default('Login') }}</h2>
+                <p style="color: #6c757d; margin-bottom: 1.5rem;">
+                    {{ 'help.login_section'|trans({}, 'messages', app.request.locale)|default('Sign in to access more features') }}
+                </p>
+                <a href="{{ path('security_login') }}" style="display: block; padding: 0.75rem 1.5rem; background: #198754; color: white; text-align: center; text-decoration: none; border-radius: 0.25rem;">
+                    {{ 'action.login'|trans({}, 'messages', app.request.locale)|default('Login') }}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    {# Quick Info #}
+    <div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; text-align: center;">
+        <h3 style="margin-bottom: 1rem;">{{ 'title.demo_info'|trans({}, 'messages', app.request.locale)|default('Demo Information') }}</h3>
+        <p style="color: #6c757d;">
+            {{ 'help.demo_credentials'|trans({}, 'messages', app.request.locale)|default('Demo credentials: jane_admin / tom_admin / john_user - Password: kitten') }}
+        </p>
+    </div>
+{% endblock %}

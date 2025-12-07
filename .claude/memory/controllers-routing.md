@@ -32,13 +32,18 @@ controllers:
 
 ### Homepage Route
 
+ Root route redirects to default locale:
+
 ```yaml
 index:
     path: /
-    controller: App\Controller\DefaultController::index
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction
+    defaults:
+        path: /%app.locale%/
+        permanent: false
 ```
 
-No locale prefix on homepage - redirects to user's preferred language.
+Then locale-specific homepage is handled by DefaultController.
 
 ## Controller Organization
 
@@ -47,9 +52,10 @@ src/Controller/
 ├── BlogController.php          # Public blog (view posts, comments, search)
 ├── SecurityController.php      # Login/logout
 ├── UserController.php          # User profile management
-├── Admin/
-│   └── BlogController.php      # Admin panel (CRUD posts)
-└── DefaultController.php       # Homepage redirect
+├── DefaultController.php       # Locale-aware homepage
+└── Admin/
+    ├── BlogController.php      # Admin post management (CRUD)
+    └── UserController.php      # Admin user management
 ```
 
 ## Public Controllers
@@ -480,6 +486,104 @@ public function delete(Request $request, Post $post, EntityManagerInterface $ent
 
 ---
 
+### Admin UserController
+
+**Location**: `src/Controller/Admin/UserController.php`
+**Route Prefix**: `/admin/users`
+**Access**: Requires `ROLE_ADMIN`
+
+**Class Declaration**:
+```php
+#[Route('/admin/users')]
+#[IsGranted(User::ROLE_ADMIN)]
+final class UserController extends AbstractController
+```
+
+#### User List
+
+```php
+#[Route('/', name: 'admin_user_index', methods: ['GET'])]
+public function index(UserRepository $users): Response
+{
+    return $this->render('admin/user/index.html.twig', [
+        'users' => $users->findAll(),
+    ]);
+}
+```
+
+**Features**:
+- Lists all users in the system
+- Shows username, full name, email, and roles
+- Provides "Login As" functionality via switch_user
+- Highlights current logged-in user
+
+**URL**: `/admin/users/`
+
+#### Create User
+
+```php
+#[Route('/new', name: 'admin_user_new', methods: ['GET', 'POST'])]
+public function new(
+    Request $request,
+    EntityManagerInterface $entityManager,
+    UserPasswordHasherInterface $passwordHasher
+): Response {
+    $user = new User();
+    $form = $this->createForm(AdminUserType::class, $user);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $plainPassword = $form->get('password')->getData();
+        $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+        $user->setPassword($hashedPassword);
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'user.created_successfully');
+
+        return $this->redirectToRoute('admin_user_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    return $this->render('admin/user/new.html.twig', [
+        'user' => $user,
+        'form' => $form,
+    ]);
+}
+```
+
+**Features**:
+- Admin can create users with all properties
+- Password hashing via UserPasswordHasherInterface
+- Role assignment (ROLE_USER, ROLE_ADMIN)
+- Uses AdminUserType form with password field
+- PRG pattern with 303 redirect
+
+**URL**: `/admin/users/new`
+
+**Switch User Feature**:
+The user list template provides "Login As" links using Symfony's built-in `switch_user` functionality:
+
+```twig
+<a href="{{ path('blog_index', {'_switch_user': user.username}) }}">
+    Login As
+</a>
+```
+
+To switch back to the original admin account, use:
+```
+?_switch_user=_exit
+```
+
+This is enabled in `config/packages/security.yaml`:
+```yaml
+firewalls:
+    main:
+        switch_user: true
+```
+
+---
+
 ## Default Controller
 
 **Location**: `src/Controller/DefaultController.php`
@@ -488,15 +592,25 @@ public function delete(Request $request, Post $post, EntityManagerInterface $ent
 #[Route('/')]
 final class DefaultController extends AbstractController
 {
+    /**
+     * Homepage - shows navigation to blog and admin sections.
+     */
     #[Route('', name: 'homepage')]
-    public function index(Request $request): Response
+    public function index(): Response
     {
         return $this->render('default/homepage.html.twig');
     }
 }
 ```
 
-Renders homepage which redirects to preferred locale.
+**Features**:
+- Renders locale-aware homepage
+- Shows blog navigation for all visitors
+- Shows admin links (user management, post management) for admins
+- Shows login link for unauthenticated users
+- Displays demo credentials information
+
+**URL**: `/{_locale}/` (e.g., `/en/`, `/fr/`)
 
 ---
 
@@ -628,5 +742,7 @@ Validate route parameters:
 | `/admin/post/{id}` | admin_post_show | Admin\BlogController::show | GET | Admin | View post |
 | `/admin/post/{id}/edit` | admin_post_edit | Admin\BlogController::edit | GET/POST | Admin | Edit post |
 | `/admin/post/{id}/delete` | admin_post_delete | Admin\BlogController::delete | POST | Admin | Delete post |
+| `/admin/users/` | admin_user_index | Admin\UserController::index | GET | Admin | List all users |
+| `/admin/users/new` | admin_user_new | Admin\UserController::new | GET/POST | Admin | Create user |
 
 **Note**: All routes (except `/`) are prefixed with `/{_locale}`.

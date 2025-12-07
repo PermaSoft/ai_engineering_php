@@ -15,8 +15,10 @@ This is the official Symfony Demo Application - a reference implementation showc
 - Comment system with spam detection
 - User authentication (form login, remember-me)
 - Role-based access control (User, Admin)
+- Admin user management (create users, switch user/impersonation)
 - Tag-based content organization
 - Multi-locale support (internationalization)
+- Locale-aware homepage with navigation
 - Live search functionality
 - Email notifications
 - RSS feed generation
@@ -26,8 +28,10 @@ This is the official Symfony Demo Application - a reference implementation showc
 
 ### Application Entry Points
 
+- **Homepage**: `/` or `/{_locale}/` - Locale-aware landing page with navigation to blog and admin sections
 - **Public Blog**: `/blog/` - Browse posts, view individual posts, add comments (when authenticated)
 - **Admin Panel**: `/admin/post/` - Create, edit, delete posts (ROLE_ADMIN only)
+- **Admin Users**: `/admin/users/` - Manage users, create new users, switch user (ROLE_ADMIN only)
 - **User Profile**: `/profile/edit` - Manage user profile and password (ROLE_USER)
 - **Login**: `/login` - Authentication page
 - **Search**: `/blog/search` - Search posts by keywords

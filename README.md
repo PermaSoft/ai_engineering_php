@@ -55,6 +55,17 @@ please rebuild the application by following your plan in @.claude/rebuild/00-mas
 then we need to stop, clear context and rerun this prompt
 ```
 
+Then the homepage is missing, php unit tests are failing and going to post url, it raises exceptions.
+
+```prompt-claude
+We need a homepage based on curent locale that drives either to visitors's post pages or to admin pages where we can see existing users, add one and login to the one we select. 
+```
+Code was modified, but not AI documentation, so:
+```prompt-claude
+Can you add this implementation of a locale-aware homepage with navigation to both visitor (blog) and admin sections in the right documention file for rebuild and documentation purposes ?
+```
+
+
 ---
 
 Symfony Demo Application

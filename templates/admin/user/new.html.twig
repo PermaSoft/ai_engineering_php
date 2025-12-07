@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'title.create_user'|trans({}, 'messages', app.request.locale)|default('Create New User') }}{% endblock %}
+
+{% block body %}
+    <div style="max-width: 600px;">
+        <h1 style="margin-bottom: 2rem;">{{ 'title.create_user'|trans({}, 'messages', app.request.locale)|default('Create New User') }}</h1>
+
+        {{ form_start(form) }}
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div>
+                    {{ form_label(form.fullName) }}
+                    {{ form_widget(form.fullName, {'attr': {'style': 'width: 100%; padding: 0.5rem; border: 1px solid #dee2e6; border-radius: 0.25rem;'}}) }}
+                    {{ form_errors(form.fullName) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.username) }}
+                    {{ form_widget(form.username, {'attr': {'style': 'width: 100%; padding: 0.5rem; border: 1px solid #dee2e6; border-radius: 0.25rem;'}}) }}
+                    {{ form_help(form.username) }}
+                    {{ form_errors(form.username) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.email) }}
+                    {{ form_widget(form.email, {'attr': {'style': 'width: 100%; padding: 0.5rem; border: 1px solid #dee2e6; border-radius: 0.25rem;'}}) }}
+                    {{ form_errors(form.email) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.password) }}
+                    {{ form_widget(form.password, {'attr': {'style': 'width: 100%; padding: 0.5rem; border: 1px solid #dee2e6; border-radius: 0.25rem;'}}) }}
+                    <small style="color: #6c757d; display: block; margin-top: 0.25rem;">
+                        {{ 'help.password_requirements'|trans({}, 'messages', app.request.locale)|default('Minimum 6 characters') }}
+                    </small>
+                    {{ form_errors(form.password) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.roles) }}
+                    <div style="padding: 0.5rem;">
+                        {{ form_widget(form.roles) }}
+                    </div>
+                    <small style="color: #6c757d; display: block; margin-top: 0.25rem;">
+                        {{ 'help.roles_selection'|trans({}, 'messages', app.request.locale)|default('Select one or more roles for this user') }}
+                    </small>
+                    {{ form_errors(form.roles) }}
+                </div>
+
+                {{ form_rest(form) }}
+
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button type="submit" style="padding: 0.75rem 1.5rem; background: #198754; color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 1rem;">
+                        {{ 'action.create'|trans({}, 'messages', app.request.locale)|default('Create User') }}
+                    </button>
+                    <a href="{{ path('admin_user_index') }}" style="padding: 0.75rem 1.5rem; background: #6c757d; color: white; text-decoration: none; border-radius: 0.25rem; display: inline-block;">
+                        {{ 'action.cancel'|trans({}, 'messages', app.request.locale)|default('Cancel') }}
+                    </a>
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

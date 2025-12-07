@@ -37,6 +37,9 @@ security:
                 path: /
                 always_remember_me: true
 
+            # Switch user functionality (login as another user)
+            switch_user: true
+
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:

@@ -14,11 +14,11 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DefaultController extends AbstractController
 {
     /**
-     * Homepage - redirects to blog index.
+     * Homepage - shows navigation to blog and admin sections.
      */
     #[Route('/', name: 'homepage')]
     public function index(): Response
     {
-        return $this->redirectToRoute('blog_index');
+        return $this->render('default/homepage.html.twig');
     }
 }
