@@ -94,6 +94,10 @@ please run php unit, and fix first issue, re-run php unit, fix first issue, and 
 After two runs, one test is failling abour changing password.
 A third one and they all pass.
 
+```prompt-claude
+When I run the symfony server, I can get to the login page, but with `jane_admin` account and its `kitten` password, I don't see any admin pages, as if valid login does not get me authenticated.
+```
+The admin section is now working from a private navigator.
 
 ---
 

@@ -19,7 +19,10 @@
       "Bash(curl:*)",
       "Bash(symfony server:log:*)",
       "Bash(symfony server:stop:*)",
-      "Bash(composer show:*)"
+      "Bash(composer show:*)",
+      "Bash(sqlite3:*)",
+      "Bash(ls:*)",
+      "Bash(symfony server:status:*)"
     ],
     "deny": [],
     "ask": []
