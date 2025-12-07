@@ -49,10 +49,16 @@ final class BlogController extends AbstractController
 
         $latestPosts = $posts->findLatest($page, $tag);
 
-        return $this->render('blog/index.'.$_format.'.twig', [
+        $response = $this->render('blog/index.'.$_format.'.twig', [
             'paginator' => $latestPosts,
             'tagName' => $tag?->getName(),
         ]);
+
+        if ('xml' === $_format) {
+            $response->headers->set('Content-Type', 'application/rss+xml; charset=UTF-8');
+        }
+
+        return $response;
     }
 
     /**
@@ -97,10 +103,13 @@ final class BlogController extends AbstractController
             return $this->redirectToRoute('blog_post', ['slug' => $post->getSlug()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('blog/comment_form_error.html.twig', [
+        $response = $this->render('blog/comment_form_error.html.twig', [
             'post' => $post,
             'form' => $form,
         ]);
+        $response->setStatusCode(Response::HTTP_OK);
+
+        return $response;
     }
 
     /**

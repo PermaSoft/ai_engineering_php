@@ -88,6 +88,12 @@ Search any other same error, any where on any files.
 Can you check the rest of the website to fix this issue if it appears on any other page and/or for any other file import? 
 ```
 
+```prompt-claude
+please run php unit, and fix first issue, re-run php unit, fix first issue, and so on until no more issues or no more free space in context window.
+```
+After two runs, one test is failling abour changing password.
+A third one and they all pass.
+
 
 ---
 

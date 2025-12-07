@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'title.login'|trans }}{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block body %}
-    <h1>{{ 'title.login'|trans }}</h1>
+    <h1>Login</h1>
 
     {% if error %}
         <div class="alert alert-danger">
@@ -15,20 +15,20 @@
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
         <div>
-            <label for="username">{{ 'label.username'|trans }}</label>
+            <label for="username">Username</label>
             <input type="text" id="username" name="_username" value="{{ last_username }}" required autofocus>
         </div>
 
         <div>
-            <label for="password">{{ 'label.password'|trans }}</label>
+            <label for="password">Password</label>
             <input type="password" id="password" name="_password" required>
         </div>
 
         <div>
             <input type="checkbox" id="remember_me" name="_remember_me" checked>
-            <label for="remember_me">{{ 'label.remember_me'|trans }}</label>
+            <label for="remember_me">Remember me</label>
         </div>
 
-        <button type="submit">{{ 'action.sign_in'|trans }}</button>
+        <button type="submit">Sign in</button>
     </form>
 {% endblock %}

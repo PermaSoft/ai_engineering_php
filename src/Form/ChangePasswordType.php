@@ -41,10 +41,7 @@ final class ChangePasswordType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank(),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'password.too_short',
-                    ]),
+                    new Length(min: 6, minMessage: 'password.too_short'),
                 ],
             ])
         ;

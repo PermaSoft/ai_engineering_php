@@ -7,13 +7,13 @@
         <h1>{{ post.title }}</h1>
 
         <p style="color: #6c757d;">
-            {{ 'label.written_by'|trans({}, 'messages', app.request.locale)|default('By') }} {{ post.author.fullName }}
-            {{ 'label.on'|trans({}, 'messages', app.request.locale)|default('on') }} {{ post.publishedAt|date('Y-m-d H:i') }}
+            By {{ post.author.fullName }}
+            on {{ post.publishedAt|date('Y-m-d H:i') }}
         </p>
 
         {% if post.tags|length > 0 %}
             <p>
-                {{ 'label.tags'|trans({}, 'messages', app.request.locale)|default('Tags') }}:
+                Tags:
                 {% for tag in post.tags %}
                     <a href="{{ path('blog_index', {tag: tag.name}) }}">#{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
                 {% endfor %}
@@ -28,14 +28,14 @@
 
         {# Comments Section #}
         <section style="margin-top: 2rem;">
-            <h3>{{ 'title.comments'|trans({}, 'messages', app.request.locale)|default('Comments') }} ({{ post.comments|length }})</h3>
+            <h3>Comments ({{ post.comments|length }})</h3>
 
             <div style="margin: 1.5rem 0;">
                 {% for comment in post.comments %}
                     {{ include('blog/_comment.html.twig', {comment: comment}) }}
                 {% else %}
                     <p style="color: #6c757d; font-style: italic;">
-                        {{ 'help.no_comments'|trans({}, 'messages', app.request.locale)|default('No comments yet. Be the first to comment!') }}
+                        No comments yet. Be the first to comment!
                     </p>
                 {% endfor %}
             </div>
@@ -46,15 +46,15 @@
         {# Comment Form Section #}
         <section style="margin-top: 2rem;">
             {% if is_granted('IS_AUTHENTICATED') %}
-                {{ render(controller('App\\\\Controller\\\\BlogController::commentForm', {post: post})) }}
+                {{ render(controller('App\\Controller\\BlogController::commentForm', {post: post})) }}
             {% else %}
                 <div style="padding: 1.5rem; background: #f8f9fa; border-radius: 0.25rem; text-align: center;">
                     <p style="margin: 0;">
-                        {{ 'help.login_to_comment'|trans({}, 'messages', app.request.locale)|default('Please') }}
+                        Please
                         <a href="{{ path('security_login') }}" style="color: #0d6efd; text-decoration: none; font-weight: bold;">
-                            {{ 'action.login'|trans({}, 'messages', app.request.locale)|default('log in') }}
+                            log in
                         </a>
-                        {{ 'help.to_add_comment'|trans({}, 'messages', app.request.locale)|default('to add a comment.') }}
+                        to add a comment.
                     </p>
                 </div>
             {% endif %}

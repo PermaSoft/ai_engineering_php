@@ -62,8 +62,9 @@ final class PostControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         // Submit form
+        $uniqueTitle = 'Test Post Title ' . time();
         $form = $crawler->selectButton('Save')->form([
-            'post[title]' => 'Test Post Title',
+            'post[title]' => $uniqueTitle,
             'post[summary]' => 'This is a test summary',
             'post[content]' => 'This is the test content for the post.',
         ]);
@@ -73,7 +74,7 @@ final class PostControllerTest extends WebTestCase
         $this->assertResponseRedirects('/en/admin/post/');
 
         // Verify post created
-        $post = $entityManager->getRepository(Post::class)->findOneBy(['title' => 'Test Post Title']);
+        $post = $entityManager->getRepository(Post::class)->findOneBy(['title' => $uniqueTitle]);
         $this->assertNotNull($post);
         $this->assertSame('This is a test summary', $post->getSummary());
     }
@@ -95,22 +96,26 @@ final class PostControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         // Submit form with updated data
+        $uniqueTitle = 'Updated Title ' . time();
         $form = $crawler->selectButton('Save')->form([
-            'post[title]' => 'Updated Title',
+            'post[title]' => $uniqueTitle,
         ]);
 
         $client->submit($form);
 
         $this->assertResponseRedirects();
 
-        // Verify update
-        $entityManager->refresh($post);
-        $this->assertSame('Updated Title', $post->getTitle());
+        // Verify update - refetch the post from database
+        $entityManager->clear();
+        $updatedPost = $entityManager->getRepository(Post::class)->find($post->getId());
+        $this->assertNotNull($updatedPost);
+        $this->assertSame($uniqueTitle, $updatedPost->getTitle());
     }
 
     public function testAdminCanDeleteOwnPost(): void
     {
         $client = static::createClient();
+        $client->enableProfiler();
 
         $entityManager = static::getContainer()->get('doctrine')->getManager();
         $admin = $entityManager->getRepository(User::class)->findOneBy(['username' => 'jane_admin']);
@@ -121,14 +126,20 @@ final class PostControllerTest extends WebTestCase
 
         $client->loginUser($admin);
 
-        // Submit delete form with CSRF token
-        $client->request('POST', '/en/admin/post/' . $postId . '/delete', [
-            'token' => $this->getContainer()->get('security.csrf.token_manager')->getToken('delete')->getValue(),
-        ]);
+        // Visit the index page to get the delete form with CSRF token
+        $crawler = $client->request('GET', '/en/admin/post/');
+        $this->assertResponseIsSuccessful();
+
+        // Find the delete form for this specific post by matching the action URL
+        $deleteForm = $crawler->filter('form[action="/en/admin/post/' . $postId . '/delete"]')->form();
+
+        // Submit the delete form (which includes the CSRF token)
+        $client->submit($deleteForm);
 
         $this->assertResponseRedirects('/en/admin/post/');
 
-        // Verify deletion
+        // Verify deletion - clear entity manager to get fresh data
+        $entityManager->clear();
         $deletedPost = $entityManager->getRepository(Post::class)->find($postId);
         $this->assertNull($deletedPost);
     }

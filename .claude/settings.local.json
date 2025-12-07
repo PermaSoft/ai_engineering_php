@@ -18,7 +18,8 @@
       "Bash(symfony server:start:*)",
       "Bash(curl:*)",
       "Bash(symfony server:log:*)",
-      "Bash(symfony server:stop:*)"
+      "Bash(symfony server:stop:*)",
+      "Bash(composer show:*)"
     ],
     "deny": [],
     "ask": []

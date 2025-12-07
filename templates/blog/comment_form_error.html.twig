@@ -18,14 +18,14 @@
     <hr style="margin: 2rem 0; border: 0; border-top: 1px solid #dee2e6;">
 
     {# Display form errors prominently #}
-    <div style="padding: 1rem; margin-bottom: 1rem; background: #f8d7da; border: 1px solid #842029; border-radius: 0.25rem; color: #842029;">
-        <strong>{{ 'error.comment_validation_failed'|trans({}, 'messages', app.request.locale)|default('There was a problem with your comment:') }}</strong>
+    <div class="alert-danger" style="padding: 1rem; margin-bottom: 1rem; background: #f8d7da; border: 1px solid #842029; border-radius: 0.25rem; color: #842029;">
+        <strong>There was a problem with your comment:</strong>
         {{ form_errors(form) }}
     </div>
 
     {# Re-render the form with user's input #}
     <div style="background: white; padding: 1.5rem; border-radius: 0.25rem; border: 1px solid #dee2e6;">
-        <h3 style="margin-top: 0;">{{ 'title.add_comment'|trans({}, 'messages', app.request.locale)|default('Add a comment') }}</h3>
+        <h3 style="margin-top: 0;">Add a comment</h3>
 
         {{ form_start(form, {
             'action': path('comment_new', {postSlug: post.slug}),
@@ -35,10 +35,10 @@
 
             <div style="margin-top: 1rem;">
                 <button type="submit" style="padding: 0.5rem 1.5rem; background: #0d6efd; color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 1rem;">
-                    {{ 'action.publish_comment'|trans({}, 'messages', app.request.locale)|default('Publish comment') }}
+                    Publish comment
                 </button>
                 <a href="{{ path('blog_post', {slug: post.slug}) }}" style="margin-left: 1rem; padding: 0.5rem 1.5rem; background: #6c757d; color: white; text-decoration: none; border-radius: 0.25rem; display: inline-block;">
-                    {{ 'action.cancel'|trans({}, 'messages', app.request.locale)|default('Cancel') }}
+                    Cancel
                 </a>
             </div>
         {{ form_end(form) }}
