@@ -1,6 +1,3 @@
-import './bootstrap.js';
-
-// Start the Stimulus application
-import './bootstrap.js';
+import './stimulus_bootstrap.js';
 
 console.log('Symfony Demo App initialized');

@@ -13,7 +13,12 @@
       "Bash(vendor/bin/phpstan:*)",
       "Bash(cat:*)",
       "Bash(php bin/phpunit:*)",
-      "Bash(php:*)"
+      "Bash(php:*)",
+      "Bash(symfony serve:status:*)",
+      "Bash(symfony server:start:*)",
+      "Bash(curl:*)",
+      "Bash(symfony server:log:*)",
+      "Bash(symfony server:stop:*)"
     ],
     "deny": [],
     "ask": []

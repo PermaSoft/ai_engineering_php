@@ -696,6 +696,30 @@ framework:
             - '*.scss'
 ```
 
+### JavaScript Entry Point
+
+**Location**: `assets/app.js`
+
+```javascript
+import './stimulus_bootstrap.js';
+
+console.log('Symfony Demo App initialized');
+```
+
+**CRITICAL**: The file imports `./stimulus_bootstrap.js` (NOT `./bootstrap.js`)
+
+### Stimulus Bootstrap
+
+**Location**: `assets/stimulus_bootstrap.js`
+
+```javascript
+import { startStimulusApp } from '@symfony/stimulus-bundle';
+
+const app = startStimulusApp();
+// register any custom, 3rd party controllers here
+// app.register('some_controller_name', SomeImportedController);
+```
+
 ### Import Maps
 
 **Location**: `importmap.php`
@@ -703,17 +727,36 @@ framework:
 ```php
 return [
     'app' => [
-        'path' => 'app.js',
+        'path' => './assets/app.js',
         'entrypoint' => true,
     ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],
+    '@symfony/stimulus-bundle' => [
+        'path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js',
+    ],
+    '@hotwired/turbo' => [
+        'version' => '7.3.0',
+    ],
+    '@symfony/ux-live-component' => [
+        'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
+    ],
     'bootstrap' => [
-        'version' => '5.3.2',
+        'version' => '5.3.8',
+    ],
+    'bootstrap/dist/css/bootstrap.min.css' => [
+        'version' => '5.3.8',
+        'type' => 'css',
     ],
 ];
 ```
+
+### Controllers JSON
+
+**Location**: `assets/controllers.json`
+
+Configuration for Stimulus controllers.
 
 ### SASS Compilation
 
@@ -730,6 +773,16 @@ Compiles `.scss` files to CSS automatically.
 JavaScript interactivity using Stimulus framework.
 
 **Example**: Search controller for live search
+
+### Asset Installation
+
+After setup or changes, install assets:
+
+```bash
+php bin/console importmap:install
+```
+
+This downloads JavaScript packages from CDN into `assets/vendor/`
 
 ---
 

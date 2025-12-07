@@ -519,11 +519,51 @@ php bin/console make:migration
 
 ## Asset Management
 
+### Asset Files Structure
+
+```
+assets/
+├── app.js                      # Main entry point (imports stimulus_bootstrap.js)
+├── stimulus_bootstrap.js       # Stimulus app initialization
+├── controllers.json            # Stimulus controllers config
+├── styles/                     # SASS files
+└── vendor/                     # Downloaded JS packages (auto-generated)
+```
+
+### JavaScript Entry Point
+
+**Location**: `assets/app.js`
+
+```javascript
+import './stimulus_bootstrap.js';
+
+console.log('Symfony Demo App initialized');
+```
+
+**CRITICAL**: Must import `./stimulus_bootstrap.js` (NOT `./bootstrap.js`)
+
+### Stimulus Bootstrap
+
+**Location**: `assets/stimulus_bootstrap.js`
+
+```javascript
+import { startStimulusApp } from '@symfony/stimulus-bundle';
+
+const app = startStimulusApp();
+// register any custom, 3rd party controllers here
+// app.register('some_controller_name', SomeImportedController);
+```
+
 ### Install Assets
 
 ```bash
 php bin/console importmap:install
 ```
+
+This command:
+- Downloads JavaScript packages from CDN
+- Stores them in `assets/vendor/`
+- Configures import maps based on `importmap.php`
 
 ### Build SASS
 
@@ -534,7 +574,20 @@ php bin/console sass:build
 php bin/console sass:build --watch
 ```
 
-### Asset Mapper
+### Asset Mapper Configuration
+
+**Location**: `config/packages/asset_mapper.yaml`
+
+```yaml
+framework:
+    asset_mapper:
+        paths:
+            - assets/
+        excluded_patterns:
+            - '*.scss'
+```
+
+### Import Map Configuration
 
 Modern asset management without Node.js:
 
@@ -543,17 +596,36 @@ Modern asset management without Node.js:
 ```php
 return [
     'app' => [
-        'path' => 'app.js',
+        'path' => './assets/app.js',
         'entrypoint' => true,
     ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],
+    '@symfony/stimulus-bundle' => [
+        'path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js',
+    ],
+    '@hotwired/turbo' => [
+        'version' => '7.3.0',
+    ],
+    '@symfony/ux-live-component' => [
+        'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
+    ],
     'bootstrap' => [
-        'version' => '5.3.2',
+        'version' => '5.3.8',
+    ],
+    'bootstrap/dist/css/bootstrap.min.css' => [
+        'version' => '5.3.8',
+        'type' => 'css',
     ],
 ];
 ```
+
+**Features**:
+- `app` entrypoint points to `./assets/app.js`
+- NPM packages loaded from CDN with specific versions
+- Local Symfony bundle assets loaded from `vendor/`
+- Bootstrap CSS imported as a CSS asset
 
 ---
 
@@ -770,6 +842,38 @@ chmod -R 777 var/
 composer dump-autoload
 ```
 
+### Asset Issues
+
+**Problem**: "Unable to find asset './bootstrap.js'" error
+
+**Cause**: `assets/app.js` importing wrong filename
+
+**Solution**:
+```bash
+# Ensure assets/app.js imports the correct file
+# File should contain: import './stimulus_bootstrap.js';
+# NOT: import './bootstrap.js';
+
+# Then reinstall assets
+php bin/console importmap:install
+```
+
+**Problem**: Missing JavaScript packages or blank page
+
+**Solution**:
+```bash
+php bin/console importmap:install
+php bin/console cache:clear
+```
+
+**Problem**: Assets not loading after fresh install
+
+**Solution**:
+1. Ensure `importmap.php` exists and is configured
+2. Run `php bin/console importmap:install`
+3. Check that `assets/vendor/` directory is created
+4. Verify `assets/app.js` and `assets/stimulus_bootstrap.js` exist
+
 ### Database Issues
 
 ```bash
@@ -808,7 +912,8 @@ php bin/console doctrine:fixtures:load
 - [ ] Create database: `php bin/console doctrine:database:create`
 - [ ] Run migrations: `php bin/console doctrine:migrations:migrate`
 - [ ] Load fixtures: `php bin/console doctrine:fixtures:load`
-- [ ] Build assets: `php bin/console sass:build`
+- [ ] Install assets: `php bin/console importmap:install`
+- [ ] Build SASS: `php bin/console sass:build`
 - [ ] Start server: `symfony server:start`
 - [ ] Visit: `https://localhost:8000`
 - [ ] Login with: `jane_admin` / `kitten`

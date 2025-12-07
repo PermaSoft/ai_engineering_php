@@ -65,6 +65,29 @@ Code was modified, but not AI documentation, so:
 Can you add this implementation of a locale-aware homepage with navigation to both visitor (blog) and admin sections in the right documention file for rebuild and documentation purposes ?
 ```
 
+```prompt-claude
+If you run symfony serve, you will see this following error:
+[Application] Dec  7 08:25:20 |CRITICA| REQUES Uncaught PHP Exception Twig\Error\RuntimeError: "An exception has been thrown during the rendering of a template ("Unable to find asset "./bootstrap.js" imported from
+"/Users/nicolas/code/PermaSoft/AI_Engineering_php/assets/app.js".") in "base.html.twig" at line 10." at base.html.twig line 10
+
+Afterward, homepage brings correctly to /en/, but this page make a 500 error, saying:
+RuntimeException  RuntimeError
+HTTP 500 Internal Server Error
+An exception has been thrown during the rendering of a template ("Unable to find asset "./bootstrap.js" imported from "/Users/nicolas/code/PermaSoft/AI_Engineering_php/assets/app.js".") in base.html.twig at line 10.
+
+Can you fix this ?
+```
+
+I saw this same error on other page, so document the solution not only locally, but for the whole site.
+```prompt-claude
+Please add the solution in the memory files to rebuild and document this application, so it will be correctly taken into account next time for the whole sebsite.
+```
+
+Search any other same error, any where on any files.
+```prompt-claude
+Can you check the rest of the website to fix this issue if it appears on any other page and/or for any other file import? 
+```
+
 
 ---
 
