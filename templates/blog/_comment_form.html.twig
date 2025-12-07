@@ -1,0 +1,17 @@
+{# Partial template for comment submission form #}
+<div style="background: white; padding: 1.5rem; border-radius: 0.25rem; border: 1px solid #dee2e6;">
+    <h3 style="margin-top: 0;">{{ 'title.add_comment'|trans({}, 'messages', app.request.locale)|default('Add a comment') }}</h3>
+
+    {{ form_start(form, {
+        'action': path('comment_new', {postSlug: post.slug}),
+        'attr': {'novalidate': 'novalidate'}
+    }) }}
+        {{ form_widget(form) }}
+
+        <div style="margin-top: 1rem;">
+            <button type="submit" style="padding: 0.5rem 1.5rem; background: #0d6efd; color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 1rem;">
+                {{ 'action.publish_comment'|trans({}, 'messages', app.request.locale)|default('Publish comment') }}
+            </button>
+        </div>
+    {{ form_end(form) }}
+</div>

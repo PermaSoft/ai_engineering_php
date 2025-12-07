@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'title.blog_index'|trans({}, 'messages', app.request.locale)|default('Blog') }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.blog_index'|trans({}, 'messages', app.request.locale)|default('Blog Posts') }}</h1>
+
+    {% if tagName is defined and tagName %}
+        <p>{{ 'help.filtered_by_tag'|trans({'%name%': tagName}, 'messages', app.request.locale)|default('Filtered by tag: ' ~ tagName) }}</p>
+    {% endif %}
+
+    {% for post in paginator.results %}
+        <article style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #dee2e6;">
+            <h2>
+                <a href="{{ path('blog_post', {slug: post.slug}) }}">{{ post.title }}</a>
+            </h2>
+
+            <p style="color: #6c757d; font-size: 0.875rem;">
+                {{ 'label.written_by'|trans({}, 'messages', app.request.locale)|default('By') }} {{ post.author.fullName }}
+                {{ 'label.on'|trans({}, 'messages', app.request.locale)|default('on') }} {{ post.publishedAt|date('Y-m-d H:i') }}
+            </p>
+
+            <p>{{ post.summary }}</p>
+
+            {% if post.tags|length > 0 %}
+                <p>
+                    {{ 'label.tags'|trans({}, 'messages', app.request.locale)|default('Tags') }}:
+                    {% for tag in post.tags %}
+                        <a href="{{ path('blog_index', {tag: tag.name}) }}">#{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            {% endif %}
+        </article>
+    {% else %}
+        <p>{{ 'help.no_posts'|trans({}, 'messages', app.request.locale)|default('No blog posts found.') }}</p>
+    {% endfor %}
+
+    {% if paginator.hasToPaginate %}
+        <nav>
+            {% if paginator.hasPreviousPage %}
+                <a href="{{ path('blog_index_paginated', {page: paginator.previousPage}) }}">{{ 'action.previous'|trans({}, 'messages', app.request.locale)|default('Previous') }}</a>
+            {% endif %}
+
+            <span>{{ 'label.page'|trans({}, 'messages', app.request.locale)|default('Page') }} {{ paginator.currentPage }} / {{ paginator.nbPages }}</span>
+
+            {% if paginator.hasNextPage %}
+                <a href="{{ path('blog_index_paginated', {page: paginator.nextPage}) }}">{{ 'action.next'|trans({}, 'messages', app.request.locale)|default('Next') }}</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+{% endblock %}

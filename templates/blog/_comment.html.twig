@@ -1,0 +1,14 @@
+{# Partial template for displaying a single comment #}
+<div style="padding: 1rem; margin-bottom: 1rem; background: #f8f9fa; border-radius: 0.25rem; border-left: 3px solid #0d6efd;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+        <strong style="color: #0d6efd;">{{ comment.author.fullName }}</strong>
+        <small style="color: #6c757d;">
+            <time datetime="{{ comment.publishedAt|date('c') }}">
+                {{ comment.publishedAt|date('Y-m-d H:i') }}
+            </time>
+        </small>
+    </div>
+    <div style="line-height: 1.6;">
+        {{ comment.content|nl2br }}
+    </div>
+</div>

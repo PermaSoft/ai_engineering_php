@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Symfony Demo Blog</title>
+        <description>Latest blog posts from Symfony Demo</description>
+        <link>{{ url('blog_index') }}</link>
+        <atom:link href="{{ url('blog_rss') }}" rel="self" type="application/rss+xml" />
+        <pubDate>{{ 'now'|date('r') }}</pubDate>
+        <language>{{ app.request.locale|default('en') }}</language>
+
+        {% for post in paginator.results|slice(0, 20) %}
+        <item>
+            <title>{{ post.title }}</title>
+            <description><![CDATA[{{ post.summary }}]]></description>
+            <link>{{ url('blog_post', {slug: post.slug}) }}</link>
+            <guid>{{ url('blog_post', {slug: post.slug}) }}</guid>
+            <pubDate>{{ post.publishedAt|date('r') }}</pubDate>
+            <author>{{ post.author.email }} ({{ post.author.fullName }})</author>
+        </item>
+        {% endfor %}
+    </channel>
+</rss>

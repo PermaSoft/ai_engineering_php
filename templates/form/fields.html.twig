@@ -1,0 +1,12 @@
+{#
+    Custom form field rendering
+
+    This template provides custom widgets and formatting for form fields.
+#}
+
+{# Custom widget for TagsInputType #}
+{% block tags_input_widget %}
+    {% set type = type|default('text') %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is defined %}value="{{ value }}" {% endif %}>
+    <small class="form-text text-muted">{{ 'help.tags_input'|trans }}</small>
+{% endblock %}

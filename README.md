@@ -50,6 +50,10 @@ based on memory files, you have functionnal description and technical guidelines
   between research and each plans, you ust be able to reset the context and continue with the next plan file. 
 ```
 
+```prompt-claude
+please rebuild the application by following your plan in @.claude/rebuild/00-master-rebuild-plan.md, do each phase in order and check if your context window is low so you can continue, if your context widow usage is high,
+then we need to stop, clear context and rerun this prompt
+```
 
 ---
 

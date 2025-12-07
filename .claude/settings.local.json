@@ -4,14 +4,22 @@
       "mcp__packmind__list_standards",
       "mcp__packmind__list_packages",
       "mcp__packmind__create_standard",
-      "mcp__packmind__save_standard"
+      "mcp__packmind__save_standard",
+      "Bash(composer create-project:*)",
+      "Bash(composer require:*)",
+      "Bash(find:*)",
+      "Bash(php bin/console doctrine:database:create:*)",
+      "Bash(php bin/console:*)",
+      "Bash(vendor/bin/phpstan:*)",
+      "Bash(cat:*)",
+      "Bash(php bin/phpunit:*)"
     ],
     "deny": [],
     "ask": []
   },
   "statusLine": {
-      "type": "command",
-      "command": "npx -y ccusage statusline",
-      "padding": 0
-    }
+    "type": "command",
+    "command": "npx -y ccusage statusline",
+    "padding": 0
+  }
 }

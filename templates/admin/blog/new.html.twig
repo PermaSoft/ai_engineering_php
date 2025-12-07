@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'title.create_post'|trans({}, 'messages', app.request.locale)|default('Create new post') }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.create_post'|trans({}, 'messages', app.request.locale)|default('Create new post') }}</h1>
+
+    {{ form_start(form) }}
+        <div style="background: white; padding: 2rem; border-radius: 0.25rem; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            {{ form_widget(form) }}
+
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                <button type="submit" name="submit" style="padding: 0.5rem 1.5rem; background: #0d6efd; color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 1rem;">
+                    {{ 'action.save'|trans({}, 'messages', app.request.locale)|default('Save') }}
+                </button>
+
+                {% if 'saveAndCreateNew' in form %}
+                    {{ form_widget(form.saveAndCreateNew, {
+                        'label': 'action.save_and_create_new'|trans({}, 'messages', app.request.locale)|default('Save and create new'),
+                        'attr': {
+                            'style': 'padding: 0.5rem 1.5rem; background: #198754; color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 1rem;'
+                        }
+                    }) }}
+                {% endif %}
+
+                <a href="{{ path('admin_post_index') }}" style="padding: 0.5rem 1.5rem; background: #6c757d; color: white; text-decoration: none; border-radius: 0.25rem; display: inline-block; font-size: 1rem;">
+                    {{ 'action.cancel'|trans({}, 'messages', app.request.locale)|default('Cancel') }}
+                </a>
+            </div>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}

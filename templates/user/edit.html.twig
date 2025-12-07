@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'title.edit_profile'|trans({}, 'messages', app.request.locale)|default('Edit Profile') }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.edit_profile'|trans({}, 'messages', app.request.locale)|default('Edit Profile') }}</h1>
+
+    <div style="background: white; padding: 2rem; border-radius: 0.25rem; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 600px;">
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button type="submit" style="padding: 0.5rem 1.5rem; background: #0d6efd; color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 1rem;">
+                    {{ 'action.save_changes'|trans({}, 'messages', app.request.locale)|default('Save changes') }}
+                </button>
+
+                <a href="{{ path('blog_index') }}" style="padding: 0.5rem 1.5rem; background: #6c757d; color: white; text-decoration: none; border-radius: 0.25rem; display: inline-block; font-size: 1rem;">
+                    {{ 'action.cancel'|trans({}, 'messages', app.request.locale)|default('Cancel') }}
+                </a>
+            </div>
+        {{ form_end(form) }}
+
+        <hr style="margin: 2rem 0; border: 0; border-top: 1px solid #dee2e6;">
+
+        <div style="margin-top: 1.5rem;">
+            <h3>{{ 'title.security'|trans({}, 'messages', app.request.locale)|default('Security') }}</h3>
+            <p style="color: #6c757d; margin-bottom: 1rem;">
+                {{ 'help.password_change'|trans({}, 'messages', app.request.locale)|default('Want to change your password?') }}
+            </p>
+            <a href="{{ path('user_change_password') }}" style="padding: 0.5rem 1.5rem; background: #198754; color: white; text-decoration: none; border-radius: 0.25rem; display: inline-block;">
+                {{ 'action.change_password'|trans({}, 'messages', app.request.locale)|default('Change password') }}
+            </a>
+        </div>
+    </div>
+{% endblock %}

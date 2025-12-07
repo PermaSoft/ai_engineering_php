@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'title.search'|trans({}, 'messages', app.request.locale)|default('Search') }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.search'|trans({}, 'messages', app.request.locale)|default('Search Blog Posts') }}</h1>
+
+    <form method="get" action="{{ path('blog_search') }}" style="margin-bottom: 2rem;">
+        <input type="text" name="q" value="{{ query }}" placeholder="{{ 'label.search_query'|trans({}, 'messages', app.request.locale)|default('Enter search terms...') }}" style="padding: 0.5rem; width: 100%; max-width: 500px;">
+        <button type="submit" style="padding: 0.5rem 1rem; margin-left: 0.5rem;">{{ 'action.search'|trans({}, 'messages', app.request.locale)|default('Search') }}</button>
+    </form>
+
+    {% if query %}
+        <p>{{ 'help.search_results'|trans({'%count%': results|length}, 'messages', app.request.locale)|default('Found ' ~ results|length ~ ' results') }}</p>
+
+        {% for post in results %}
+            <article style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #dee2e6;">
+                <h2>
+                    <a href="{{ path('blog_post', {slug: post.slug}) }}">{{ post.title }}</a>
+                </h2>
+
+                <p style="color: #6c757d; font-size: 0.875rem;">
+                    {{ 'label.written_by'|trans({}, 'messages', app.request.locale)|default('By') }} {{ post.author.fullName }}
+                    {{ 'label.on'|trans({}, 'messages', app.request.locale)|default('on') }} {{ post.publishedAt|date('Y-m-d H:i') }}
+                </p>
+
+                <p>{{ post.summary }}</p>
+            </article>
+        {% else %}
+            <p>{{ 'help.no_results'|trans({}, 'messages', app.request.locale)|default('No results found.') }}</p>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

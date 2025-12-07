@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale|default('en') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Symfony Demo{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    {% block stylesheets %}
+        {% if app.environment != 'test' %}
+            {{ importmap('app') }}
+        {% endif %}
+    {% endblock %}
+</head>
+<body>
+    <header>
+        {% block header %}
+            <nav style="padding: 1rem; background: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+                <div style="max-width: 1200px; margin: 0 auto; display: flex; gap: 2rem; align-items: center;">
+                    <a href="{{ path('homepage') }}" style="font-weight: bold; font-size: 1.25rem; text-decoration: none; color: #000;">
+                        Symfony Demo
+                    </a>
+
+                    <div style="flex: 1; display: flex; gap: 1rem;">
+                        <a href="{{ path('blog_index') }}">{{ 'menu.homepage'|trans({}, 'messages', app.request.locale)|default('Blog') }}</a>
+
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('admin_post_index')|default('#') }}">{{ 'menu.admin'|trans({}, 'messages', app.request.locale)|default('Admin') }}</a>
+                        {% endif %}
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        {% if app.user %}
+                            <span>{{ app.user.fullName }}</span>
+                            <a href="{{ path('user_edit')|default('#') }}">{{ 'menu.user_profile'|trans({}, 'messages', app.request.locale)|default('Profile') }}</a>
+                            <a href="{{ path('security_logout') }}">{{ 'menu.logout'|trans({}, 'messages', app.request.locale)|default('Logout') }}</a>
+                        {% else %}
+                            <a href="{{ path('security_login') }}">{{ 'menu.login'|trans({}, 'messages', app.request.locale)|default('Login') }}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </nav>
+        {% endblock %}
+    </header>
+
+    <main style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem;">
+        {% for message in app.flashes('success') %}
+            <div style="padding: 1rem; margin-bottom: 1rem; background: #d1e7dd; border: 1px solid #0f5132; border-radius: 0.25rem; color: #0f5132;">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div style="padding: 1rem; margin-bottom: 1rem; background: #f8d7da; border: 1px solid #842029; border-radius: 0.25rem; color: #842029;">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% block body %}{% endblock %}
+    </main>
+
+    <footer style="margin-top: 3rem; padding: 2rem 1rem; background: #f8f9fa; border-top: 1px solid #dee2e6; text-align: center;">
+        {% block footer %}
+            <p>&copy; {{ 'now'|date('Y') }} Symfony Demo</p>
+        {% endblock %}
+    </footer>
+
+    {% block javascripts %}
+        {% if app.environment != 'test' %}
+            {{ importmap('app') }}
+        {% endif %}
+    {% endblock %}
+</body>
+</html>
