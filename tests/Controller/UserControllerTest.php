@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -16,8 +17,11 @@ final class UserControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $entityManager = static::getContainer()->get('doctrine')->getManager();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
         $user = $entityManager->getRepository(User::class)->findOneBy(['username' => 'john_user']);
+
+        $this->assertNotNull($user, 'User john_user must exist for test');
 
         $client->loginUser($user);
 
@@ -41,8 +45,11 @@ final class UserControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $entityManager = static::getContainer()->get('doctrine')->getManager();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
         $user = $entityManager->getRepository(User::class)->findOneBy(['username' => 'john_user']);
+
+        $this->assertNotNull($user, 'User john_user must exist for test');
 
         $client->loginUser($user);
 

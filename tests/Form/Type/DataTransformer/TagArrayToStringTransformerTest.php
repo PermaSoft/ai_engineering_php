@@ -30,8 +30,14 @@ final class TagArrayToStringTransformerTest extends KernelTestCase
         self::bootKernel();
         $container = static::getContainer();
 
-        $this->entityManager = $container->get(EntityManagerInterface::class);
-        $this->tagRepository = $container->get(TagRepository::class);
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $container->get(EntityManagerInterface::class);
+        $this->entityManager = $entityManager;
+
+        /** @var TagRepository $tagRepository */
+        $tagRepository = $container->get(TagRepository::class);
+        $this->tagRepository = $tagRepository;
+
         $this->transformer = new TagArrayToStringTransformer($this->tagRepository);
     }
 

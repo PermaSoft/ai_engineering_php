@@ -138,6 +138,12 @@ please rebuild the application, the documentation and packmind by following your
 context window is low so you can continue, if your context widow usage is high,
 then we need to stop, clear context and rerun this prompt
 ```
+After a long work from claude, of course, what is not tested does not work : symfony:server shows missing import on homepage.
+```prompt-claude
+can you run all validation tools from linter, compilation, unit test, other tes and running the application to check for any issue and fix them.
+```
+
+Tests are passing, UI is broken
 
 
 Symfony Demo Application

@@ -6,6 +6,7 @@ namespace App\Tests\Controller\Admin;
 
 use App\Entity\Post;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -25,8 +26,11 @@ final class PostControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $entityManager = static::getContainer()->get('doctrine')->getManager();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
         $user = $entityManager->getRepository(User::class)->findOneBy(['username' => 'john_user']);
+
+        $this->assertNotNull($user, 'User john_user must exist for test');
 
         $client->loginUser($user);
         $client->request('GET', '/en/admin/post/');
@@ -38,8 +42,11 @@ final class PostControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $entityManager = static::getContainer()->get('doctrine')->getManager();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
         $admin = $entityManager->getRepository(User::class)->findOneBy(['username' => 'jane_admin']);
+
+        $this->assertNotNull($admin, 'Admin user jane_admin must exist for test');
 
         $client->loginUser($admin);
         $client->request('GET', '/en/admin/post/');
@@ -52,8 +59,11 @@ final class PostControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $entityManager = static::getContainer()->get('doctrine')->getManager();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
         $admin = $entityManager->getRepository(User::class)->findOneBy(['username' => 'jane_admin']);
+
+        $this->assertNotNull($admin, 'Admin user jane_admin must exist for test');
 
         $client->loginUser($admin);
 
@@ -83,8 +93,12 @@ final class PostControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $entityManager = static::getContainer()->get('doctrine')->getManager();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
         $admin = $entityManager->getRepository(User::class)->findOneBy(['username' => 'jane_admin']);
+
+        $this->assertNotNull($admin, 'Admin user jane_admin must exist for test');
+
         $post = $entityManager->getRepository(Post::class)->findOneBy(['author' => $admin]);
 
         $this->assertNotNull($post, 'Admin should have at least one post');
@@ -117,11 +131,15 @@ final class PostControllerTest extends WebTestCase
         $client = static::createClient();
         $client->enableProfiler();
 
-        $entityManager = static::getContainer()->get('doctrine')->getManager();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
         $admin = $entityManager->getRepository(User::class)->findOneBy(['username' => 'jane_admin']);
+
+        $this->assertNotNull($admin, 'Admin user jane_admin must exist for test');
+
         $post = $entityManager->getRepository(Post::class)->findOneBy(['author' => $admin]);
 
-        $this->assertNotNull($post);
+        $this->assertNotNull($post, 'At least one post by admin must exist for test');
         $postId = $post->getId();
 
         $client->loginUser($admin);

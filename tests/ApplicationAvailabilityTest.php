@@ -6,6 +6,7 @@ namespace App\Tests;
 
 use App\Entity\Post;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -20,7 +21,8 @@ final class ApplicationAvailabilityTest extends WebTestCase
 
         // Load fixtures for posts
         if (str_contains($url, '{slug}')) {
-            $entityManager = static::getContainer()->get('doctrine')->getManager();
+            /** @var EntityManagerInterface $entityManager */
+            $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
             $post = $entityManager->getRepository(Post::class)->findOneBy([]);
             if ($post) {
                 $url = str_replace('{slug}', $post->getSlug(), $url);

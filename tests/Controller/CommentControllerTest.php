@@ -7,6 +7,7 @@ namespace App\Tests\Controller;
 use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -18,11 +19,13 @@ final class CommentControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $entityManager = static::getContainer()->get('doctrine')->getManager();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
         $user = $entityManager->getRepository(User::class)->findOneBy(['username' => 'john_user']);
         $post = $entityManager->getRepository(Post::class)->findOneBy([]);
 
-        $this->assertNotNull($post);
+        $this->assertNotNull($user, 'User john_user must exist for test');
+        $this->assertNotNull($post, 'At least one post must exist for test');
 
         $client->loginUser($user);
 
@@ -52,9 +55,13 @@ final class CommentControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $entityManager = static::getContainer()->get('doctrine')->getManager();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
         $user = $entityManager->getRepository(User::class)->findOneBy(['username' => 'john_user']);
         $post = $entityManager->getRepository(Post::class)->findOneBy([]);
+
+        $this->assertNotNull($user, 'User john_user must exist for test');
+        $this->assertNotNull($post, 'At least one post must exist for test');
 
         $client->loginUser($user);
 
@@ -77,8 +84,11 @@ final class CommentControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $entityManager = static::getContainer()->get('doctrine')->getManager();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
         $post = $entityManager->getRepository(Post::class)->findOneBy([]);
+
+        $this->assertNotNull($post, 'At least one post must exist for test');
 
         $crawler = $client->request('GET', '/en/blog/posts/' . $post->getSlug());
 

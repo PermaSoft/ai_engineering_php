@@ -23,8 +23,13 @@ final class InfrastructureTest extends KernelTestCase
         self::bootKernel();
         $container = static::getContainer();
 
-        $this->entityManager = $container->get(EntityManagerInterface::class);
-        $this->passwordHasher = $container->get(UserPasswordHasherInterface::class);
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $container->get(EntityManagerInterface::class);
+        $this->entityManager = $entityManager;
+
+        /** @var UserPasswordHasherInterface $passwordHasher */
+        $passwordHasher = $container->get(UserPasswordHasherInterface::class);
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function testCanCreateTestUser(): void

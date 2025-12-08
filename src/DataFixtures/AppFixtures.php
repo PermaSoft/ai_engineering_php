@@ -115,10 +115,8 @@ final class AppFixtures extends Fixture
 
             // Add 2-4 random tags to each post
             $numTags = random_int(2, 4);
+            /** @var array<int> $randomTags */
             $randomTags = array_rand($tags, $numTags);
-            if (!is_array($randomTags)) {
-                $randomTags = [$randomTags];
-            }
             foreach ($randomTags as $tagIndex) {
                 $post->addTag($tags[$tagIndex]);
             }

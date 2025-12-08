@@ -91,9 +91,16 @@ final class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getUserIdentifier(): string
     {
-        return (string) $this->username;
+        if (null === $this->username || '' === $this->username) {
+            throw new \RuntimeException('Username cannot be empty for user identification');
+        }
+
+        return $this->username;
     }
 
     /**

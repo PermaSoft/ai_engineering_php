@@ -5,7 +5,11 @@
       "mcp__packmind__get_standard_details",
       "mcp__packmind__create_standard_rule",
       "mcp__packmind__save_standard_rule",
-      "Bash(tr:*)"
+      "Bash(tr:*)",
+      "Bash(php-config:*)",
+      "Bash(brew list:*)",
+      "Bash(brew info:*)",
+      "Bash(brew install:*)"
     ],
     "deny": [],
     "ask": []
