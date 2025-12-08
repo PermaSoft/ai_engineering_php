@@ -24,7 +24,10 @@
       "Bash(ls:*)",
       "Bash(symfony server:status:*)",
       "Bash(git ls-tree:*)",
-      "Bash(comm:*)"
+      "Bash(comm:*)",
+      "Bash(for i in {06..16})",
+      "Bash(do echo \"Creating plan $i...\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

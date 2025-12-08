@@ -108,6 +108,15 @@ can you write this comparison in a file, that may include mermaid shcema, infogr
 ```
 The diff file is generated here: [BRANCH_COMPARISON_REPORT.md](BRANCH_COMPARISON_REPORT.md)
 
+Let's complete rebuilding by adding the missing pieces:
+
+```prompt-claude
+based on this comparison with head of walkthrought branch and memory files that includes functionnal description and technical guidelines, I want to build all the missing parts, without removing what's good in rebuilding branch..
+The process should be named `comparison fullfilment` and start with a research of every functionnality you need to build and produce a plan for each of them that point to all needed data and only needed data.
+PLan shall include to update documentation and memory files for missing functionnality, constraints and guidelines.
+Then for each plan, produce a checklist of every thing you need to produce (doc, tests, code, etc.).
+between research and each plans, you ust be able to reset the context and continue with the next plan file.
+```
 
 
 ---
