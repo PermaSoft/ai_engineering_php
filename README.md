@@ -162,6 +162,50 @@ Can you choose a design system close to the official demosite, as you may find i
 ```prompt-claude
 The language and user menu in the navbar does not show up
 ```
+```prompt-claude
+When I click on the actual language, there is no popup or menu showing up to change the language.
+When I click on the logged in name, there is no menu showing up to choose other actions.
+```
+```prompt-claude
+Upgrading is not the solution...
+Can you launch the server, click on it and read the javascript error message or you need a tool for that or I should provide the error message by hand ?
+```
+```prompt-claude
+An import map rule for specifier '<URL>' was removed, as it conflicted with an existing rule.
+[... 2 more lines ...]
+login:1 An import map rule for specifier 'typeahead.js' was removed, as it conflicted with an existing rule.
+login:1 An import map rule for specifier 'object-assign' was removed, as it conflicted with an existing rule.
+[... many more lines ...]
+stimulus.index-S4zNcea.js:7 application #starting
+stimulus.index-S4zNcea.js:7 application #start
+
+When clicking, we have some more logs:
+dropdown-NeYjmnj.js:7 Uncaught TypeError: a.createPopper is not a function
+    at B._createPopper (dropdown-NeYjmnj.js:7:13999)
+    at B.show (dropdown-NeYjmnj.js:7:12318)
+    at B.toggle (dropdown-NeYjmnj.js:7:12152)
+    at HTMLAnchorElement.<anonymous> (dropdown-NeYjmnj.js:7:16558)
+    at HTMLDocument.o (dropdown-NeYjmnj.js:7:4501)
+_createPopper    @    dropdown-NeYjmnj.js:7
+show    @    dropdown-NeYjmnj.js:7
+toggle    @    dropdown-NeYjmnj.js:7
+(anonyme)    @    dropdown-NeYjmnj.js:7
+o    @    dropdown-NeYjmnj.js:7 
+```
+
+```prompt-claude
+LogicException  RuntimeError
+HTTP 500 Internal Server Error
+An exception has been thrown during the rendering of a template ("The "@popperjs/core-real" vendor asset is missing. Try running the "importmap:install" command.") in base.html.twig at line 143.
+```
+
+```prompt-claude
+The language menu works in login page and in blog post, but it does not work anymore when a user is logged in (jane_admin), and the menu of the logged in name does not work either
+```
+
+Yeah, it works now.
+
+
 
 
 

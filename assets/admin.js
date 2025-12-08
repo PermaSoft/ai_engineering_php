@@ -7,8 +7,8 @@
  * - Admin-specific components
  */
 
-// Import main app (includes Stimulus, Bootstrap, etc.)
-import './app.js';
+// Import Bootstrap Alert component for auto-hiding alerts
+import { Alert } from 'bootstrap';
 
 // Admin-specific functionality
 document.addEventListener('DOMContentLoaded', () => {
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Auto-hide success alerts after 5 seconds
     document.querySelectorAll('.alert-success').forEach((alert) => {
         setTimeout(() => {
-            const bsAlert = new bootstrap.Alert(alert);
+            const bsAlert = new Alert(alert);
             bsAlert.close();
         }, 5000);
     });
