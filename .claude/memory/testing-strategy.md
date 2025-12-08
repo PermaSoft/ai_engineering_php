@@ -17,8 +17,8 @@ tests/
 │   └── Admin/
 │       └── PostControllerTest.php      # Admin CRUD
 ├── Command/
-│   ├── AddUserCommandTest.php          # User creation command (TODO: Plan 09)
-│   └── ListUsersCommandTest.php        # List users command (TODO: Plan 09)
+│   ├── AddUserCommandTest.php          # User creation command (7 tests)
+│   └── ListUsersCommandTest.php        # List users command (5 tests)
 ├── Form/
 │   └── DataTransformer/
 │       └── TagArrayToStringTransformerTest.php  # (TODO: Plan 10)
@@ -231,6 +231,116 @@ tests/
 └── Example/                       # Example tests
     └── InfrastructureTest.php    # Infrastructure demo
 ```
+
+---
+
+## Command Testing
+
+### Using AbstractCommandTestCase
+
+Command tests extend `AbstractCommandTestCase` for simplified command testing:
+
+```php
+use App\Tests\AbstractCommandTestCase;
+
+final class AddUserCommandTest extends AbstractCommandTestCase
+{
+    public function testExecuteCreatesUser(): void
+    {
+        $tester = $this->executeCommandByName('app:add-user', [
+            'username' => 'testuser',
+            'password' => 'password123',
+            'email' => 'test@example.com',
+        ]);
+
+        $this->assertCommandIsSuccessful($tester);
+        $this->assertOutputContains($tester, 'successfully created');
+    }
+}
+```
+
+### Testing Command Options
+
+Test commands with flags and options:
+
+```php
+public function testExecuteWithAdminRole(): void
+{
+    $tester = $this->executeCommandByName('app:add-user', [
+        'username' => 'admin',
+        'password' => 'password123',
+        'email' => 'admin@example.com',
+        '--admin' => true,  // Test option
+    ]);
+
+    $this->assertCommandIsSuccessful($tester);
+}
+```
+
+### Testing Error Cases
+
+Verify error handling:
+
+```php
+public function testExecuteWithDuplicateUsername(): void
+{
+    // Create first user
+    $this->executeCommandByName('app:add-user', [
+        'username' => 'duplicate',
+        'password' => 'password123',
+        'email' => 'first@example.com',
+    ]);
+
+    // Try duplicate
+    $tester = $this->executeCommandByName('app:add-user', [
+        'username' => 'duplicate',
+        'password' => 'password123',
+        'email' => 'second@example.com',
+    ]);
+
+    $this->assertCommandFailed($tester);
+    $this->assertOutputContains($tester, 'already exists');
+}
+```
+
+### Testing with TestUtilities
+
+Use TestUtilities for data setup:
+
+```php
+use App\Tests\Utils\TestUtilities;
+
+public function testListUsers(): void
+{
+    TestUtilities::createUser($this->entityManager, $this->passwordHasher, [
+        'username' => 'user1',
+        'fullName' => 'User One',
+    ]);
+
+    $tester = $this->executeCommandByName('app:list-users');
+
+    $this->assertCommandIsSuccessful($tester);
+    $this->assertOutputContains($tester, 'user1');
+}
+```
+
+### Command Test Coverage
+
+**AddUserCommandTest** (7 tests):
+- Execute creates user
+- Execute with admin role
+- Execute with duplicate username
+- Execute with invalid email
+- Execute with short password (documents current behavior)
+- Execute with empty username
+- Execute displays correct role message
+
+**ListUsersCommandTest** (5 tests):
+- Execute displays user list
+- Execute shows total user count
+- Execute shows user list title
+- Execute shows all user roles
+- Execute shows user details
 
 ---
 
