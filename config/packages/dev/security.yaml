@@ -1,0 +1,7 @@
+security:
+    firewalls:
+        main:
+            # Switch user functionality (impersonation) - development only
+            # Allows admins to log in as other users for testing purposes
+            # NEVER enable this in production!
+            switch_user: true

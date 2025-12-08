@@ -32,7 +32,9 @@ final class UserControllerTest extends WebTestCase
 
         $client->submit($form);
 
-        $this->assertResponseRedirects('/en/profile/edit');
+        // User should be logged out after password change (security best practice)
+        // and redirected to blog index
+        $this->assertResponseRedirects('/en/blog/');
     }
 
     public function testUserCanEditProfile(): void

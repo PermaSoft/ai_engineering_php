@@ -30,18 +30,30 @@ final class ChangePasswordType extends AbstractType
                 'constraints' => [
                     new UserPassword(),
                 ],
+                'mapped' => false,
+                'attr' => [
+                    'autocomplete' => 'current-password',  // Proper autocomplete hint for password managers
+                ],
             ])
             ->add('newPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [
                     'label' => 'label.new_password',
+                    'attr' => ['autocomplete' => 'new-password'],
                 ],
                 'second_options' => [
                     'label' => 'label.new_password_confirm',
+                    'attr' => ['autocomplete' => 'new-password'],
                 ],
+                'mapped' => false,
                 'constraints' => [
                     new NotBlank(),
-                    new Length(min: 6, minMessage: 'password.too_short'),
+                    new Length(
+                        min: 6,
+                        max: 128,  // Prevent potential performance issues
+                        minMessage: 'password.too_short',
+                        maxMessage: 'password.too_long'
+                    ),
                 ],
             ])
         ;

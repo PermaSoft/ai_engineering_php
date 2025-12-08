@@ -27,7 +27,9 @@
       "Bash(comm:*)",
       "Bash(for i in {06..16})",
       "Bash(do echo \"Creating plan $i...\")",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfix: security hardening - CSRF, logout, remember-me, autocomplete\n\nSecurity improvements implemented:\n- Enable CSRF protection on logout\n- Logout user after password change (security best practice)\n- Make remember-me opt-in (unchecked by default)\n- Add autocomplete attributes to password fields\n- Add max length constraint (128) to passwords\n- Move switch_user to dev environment only\n\nUpdated tests to match new security behavior.\nUpdated memory documentation with security hardening checklist.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []

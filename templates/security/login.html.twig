@@ -24,9 +24,11 @@
             <input type="password" id="password" name="_password" required>
         </div>
 
-        <div>
-            <input type="checkbox" id="remember_me" name="_remember_me" checked>
-            <label for="remember_me">Remember me</label>
+        <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="remember_me" name="_remember_me">
+            <label class="form-check-label" for="remember_me">
+                {{ 'label.remember_me'|trans }}
+            </label>
         </div>
 
         <button type="submit">Sign in</button>

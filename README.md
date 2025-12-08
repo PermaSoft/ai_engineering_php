@@ -118,6 +118,11 @@ Then for each plan, produce a checklist of every thing you need to produce (doc,
 between research and each plans, you ust be able to reset the context and continue with the next plan file.
 ```
 
+```prompt-claude
+please rebuild the application by following your plan in @.claude/comparison-fulfillment/README.md and @.claude/comparison-fulfillment/00-MASTER-PLAN.md , do each phase in order and check if your context window is low so you can
+continue, if your context widow usage is high,
+then we need to stop, clear context and rerun this prompt
+```
 
 ---
 

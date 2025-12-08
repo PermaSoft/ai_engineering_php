@@ -631,3 +631,200 @@ public function testAdminAccessDeniedForRegularUser(): void
     $this->assertResponseStatusCodeSame(403);
 }
 ```
+
+## Security Hardening Checklist
+
+These security hardening measures have been implemented to address common vulnerabilities.
+
+### Password Change Security
+
+**Best Practice: Force Logout After Password Change**
+
+When a user changes their password, they should be logged out and forced to re-authenticate with the new password. This prevents session hijacking if the password was compromised.
+
+**Implementation:**
+```php
+use Symfony\Bundle\SecurityBundle\Security;
+
+#[Route('/change-password', name: 'user_change_password', methods: ['GET', 'POST'])]
+public function changePassword(
+    #[CurrentUser] User $user,
+    Request $request,
+    UserPasswordHasherInterface $passwordHasher,
+    EntityManagerInterface $entityManager,
+    Security $security
+): Response {
+    $form = $this->createForm(ChangePasswordType::class);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $user->setPassword(
+            $passwordHasher->hashPassword($user, $form->get('newPassword')->getData())
+        );
+        $entityManager->flush();
+
+        // Security best practice: logout user after password change
+        return $security->logout(validateCsrfToken: false) ?? $this->redirectToRoute('blog_index');
+    }
+
+    return $this->render('user/change_password.html.twig', ['form' => $form]);
+}
+```
+
+**Key Points:**
+- Use `Security::logout()` service
+- Set `validateCsrfToken: false` since user is authenticated
+- Redirect to public page (not profile) after logout
+- Do NOT display flash message (user is logged out and won't see it)
+
+### Form Security
+
+**Autocomplete Attributes on Password Fields**
+
+Modern browsers and password managers use autocomplete attributes to properly handle password fields. Always use the correct HTML5 autocomplete values:
+
+```php
+->add('currentPassword', PasswordType::class, [
+    'label' => 'label.current_password',
+    'constraints' => [new UserPassword()],
+    'mapped' => false,
+    'attr' => [
+        'autocomplete' => 'current-password',  // For existing password
+    ],
+])
+->add('newPassword', RepeatedType::class, [
+    'type' => PasswordType::class,
+    'first_options' => [
+        'label' => 'label.new_password',
+        'attr' => ['autocomplete' => 'new-password'],  // For new password
+    ],
+    'second_options' => [
+        'label' => 'label.new_password_confirm',
+        'attr' => ['autocomplete' => 'new-password'],  // For confirmation
+    ],
+    'mapped' => false,
+    'constraints' => [
+        new NotBlank(),
+        new Length(min: 6, max: 128),  // Always set max length
+    ],
+])
+```
+
+**Best Practices:**
+- `'autocomplete' => 'current-password'` - For existing password fields
+- `'autocomplete' => 'new-password'` - For new password and confirmation fields
+- `'mapped' => false` - For fields that don't map directly to entity properties
+- Always set maximum password length (e.g., 128 characters) to prevent performance issues
+
+### Session Security
+
+**Remember Me Configuration**
+
+Users should explicitly opt-in to persistent sessions rather than being automatically remembered.
+
+**Configuration** (`config/packages/security.yaml`):
+```yaml
+remember_me:
+    secret: '%kernel.secret%'
+    lifetime: 604800  # 1 week
+    path: /
+    always_remember_me: false  # Require explicit opt-in
+    remember_me_parameter: '_remember_me'  # Checkbox field name
+```
+
+**Login Template:**
+```twig
+<div class="form-check mb-3">
+    <input type="checkbox" class="form-check-input" id="remember_me" name="_remember_me">
+    <label class="form-check-label" for="remember_me">
+        {{ 'label.remember_me'|trans }}
+    </label>
+</div>
+```
+
+**Key Points:**
+- Set `always_remember_me: false` (not `true`)
+- Provide checkbox in login template (unchecked by default)
+- Use translation key for label
+
+**CSRF Protection on Logout**
+
+Enable CSRF protection on logout to prevent attackers from logging users out via malicious links.
+
+**Configuration** (`config/packages/security.yaml`):
+```yaml
+logout:
+    path: security_logout
+    target: blog_index
+    enable_csrf: true  # Protect against CSRF attacks
+```
+
+This ensures logout requests require a valid CSRF token.
+
+### Development vs Production
+
+**Separate Dev-Only Security Features**
+
+Features like "switch user" (impersonation) should NEVER be available in production.
+
+**Production Config** (`config/packages/security.yaml`):
+```yaml
+main:
+    # Do NOT include switch_user here
+    # It should only be in dev environment
+```
+
+**Dev Config** (`config/packages/dev/security.yaml`):
+```yaml
+security:
+    firewalls:
+        main:
+            # Switch user functionality - development only
+            # Allows admins to log in as other users for testing
+            switch_user: true
+```
+
+**Key Points:**
+- Use `config/packages/dev/security.yaml` for development-only features
+- Never enable `switch_user` in main security.yaml
+- Keep sensitive debugging features environment-specific
+- Symfony automatically loads `dev/` configs only in development
+
+### HTTP Method Restrictions
+
+Always explicitly declare HTTP methods on routes to prevent unintended access:
+
+```php
+#[Route('/edit', name: 'user_edit', methods: ['GET', 'POST'])]
+#[Route('/change-password', name: 'user_change_password', methods: ['GET', 'POST'])]
+```
+
+This prevents:
+- GET requests to POST-only actions
+- DELETE/PUT requests where not intended
+- Potential CSRF vulnerabilities
+
+### Security Testing Checklist
+
+When testing security changes:
+
+1. **Logout CSRF Protection**
+   - Try to logout via GET request without token → should fail
+   - Use logout link in UI → should succeed
+
+2. **Password Change Forces Logout**
+   - Change password → should be logged out
+   - Should be redirected to public page
+   - Can log back in with new password
+
+3. **Remember Me Requires Checkbox**
+   - Login without checkbox → session ends when browser closes
+   - Login with checkbox → session persists across browser restarts
+
+4. **Switch User in Dev Only**
+   - In prod environment → switch user should fail (403)
+   - In dev environment → switch user should work
+
+5. **Autocomplete Attributes**
+   - Inspect form HTML → verify autocomplete attributes present
+   - Test with password manager → should handle fields correctly

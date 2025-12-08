@@ -28,17 +28,19 @@ security:
             # Logout configuration
             logout:
                 path: security_logout
-                target: homepage
+                target: blog_index
+                enable_csrf: true  # Protect against CSRF attacks on logout
 
             # Remember me cookie (1 week)
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
                 path: /
-                always_remember_me: true
+                always_remember_me: false  # Users must opt-in via checkbox
+                remember_me_parameter: '_remember_me'  # Checkbox field name
 
-            # Switch user functionality (login as another user)
-            switch_user: true
+            # Switch user functionality moved to dev environment only
+            # See config/packages/dev/security.yaml
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
