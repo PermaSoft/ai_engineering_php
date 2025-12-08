@@ -113,9 +113,11 @@ comment.too_short: 'Comment is too short (minimum 5 characters).'
 comment.too_long: 'Comment is too long (maximum 10,000 characters).'
 
 # Password validation
+password.not_blank: 'Please enter a password.'
 password.too_short: 'Password must be at least 6 characters long.'
 password.too_long: 'Password cannot exceed 128 characters.'
-password.mismatch: 'The password fields must match.'
+password.dont_match: 'The passwords do not match.'
+password.mismatch: 'Current password is incorrect.'
 
 # Help
 help.post_edit_note: 'Last updated:'

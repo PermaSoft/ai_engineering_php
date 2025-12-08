@@ -139,7 +139,9 @@ context window is low so you can continue, if your context widow usage is high,
 then we need to stop, clear context and rerun this prompt
 ```
 
-/clear---
+
+
+
 
 Symfony Demo Application
 ========================
