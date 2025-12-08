@@ -99,6 +99,17 @@ When I run the symfony server, I can get to the login page, but with `jane_admin
 ```
 The admin section is now working from a private navigator.
 
+```prompt-claude
+I implemented the official symfony demo application in the git banch `walkthrought` and I build packmind's standards from it.
+In the other branch `rebuilding`, I asked `claude code` to rebuild the demo application from functionnal specifications and from packmind standards.
+Can you ultre think the comparison beetwen this two branches' head ?
+How far the rebuilding is from the walkthrought in all dimensions: functionnality, code guidelines, security, design system, etc.
+can you write this comparison in a file, that may include mermaid shcema, infographics, if usefull.
+```
+The diff file is generated here: [BRANCH_COMPARISON_REPORT.md](BRANCH_COMPARISON_REPORT.md)
+
+
+
 ---
 
 Symfony Demo Application

@@ -22,7 +22,9 @@
       "Bash(composer show:*)",
       "Bash(sqlite3:*)",
       "Bash(ls:*)",
-      "Bash(symfony server:status:*)"
+      "Bash(symfony server:status:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(comm:*)"
     ],
     "deny": [],
     "ask": []
