@@ -29,6 +29,11 @@ action.publish_comment: 'Publish comment'
 action.login: 'log in'
 action.change_password: 'Change password'
 action.update_password: 'Update password'
+action.browse_app: 'Go to Homepage'
+action.back: 'Go Back'
+action.go_to_profile: 'Go to Profile'
+action.sign_in: 'Sign in'
+action.search: 'Search'
 
 # Labels
 label.title: 'Title'
@@ -49,6 +54,8 @@ label.current_password: 'Current Password'
 label.new_password: 'New Password'
 label.new_password_confirm: 'Confirm New Password'
 label.remember_me: 'Remember me'
+label.note: 'Note'
+label.error: 'Error'
 
 # Flash messages
 post.created_successfully: 'Post created successfully!'
@@ -90,3 +97,27 @@ help.password_must_match: 'New password and confirmation must match'
 
 # Errors
 error.comment_validation_failed: 'There was a problem with your comment:'
+
+# HTTP Error Pages
+http_error:
+    name: 'Error'
+    description: 'An error occurred while processing your request. Please try again.'
+
+http_error_403:
+    name: 'Access Denied'
+    title: 'Access Denied'
+    description: 'You do not have permission to access this page.'
+    help_text: 'If you believe this is an error, please contact the administrator or try logging in with a different account.'
+
+http_error_404:
+    name: 'Page Not Found'
+    title: 'Page Not Found'
+    description: 'The page you are looking for does not exist.'
+    suggestion: 'You can browse the blog, search for content, or return to the previous page.'
+
+http_error_500:
+    name: 'Server Error'
+    title: 'Internal Server Error'
+    description: 'We apologize for the inconvenience. An unexpected error has occurred.'
+    help_text: 'Our team has been notified and is working to resolve the issue.'
+    contact_admin: 'If the problem persists, please contact the administrator.'

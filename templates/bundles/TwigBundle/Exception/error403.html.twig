@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block page_title %}{{ 'http_error_403.name'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2 text-center">
+                <h1 class="display-1 text-warning">403</h1>
+                <h2 class="mb-4">{{ 'http_error_403.title'|trans }}</h2>
+
+                <p class="lead">
+                    {{ 'http_error_403.description'|trans }}
+                </p>
+
+                <hr class="my-4">
+
+                <div class="alert alert-info" role="alert">
+                    <strong>{{ 'label.note'|trans }}:</strong>
+                    {{ 'http_error_403.help_text'|trans }}
+                </div>
+
+                <p class="mt-4">
+                    {% if app.user %}
+                        <a href="{{ path('blog_index') }}" class="btn btn-primary">
+                            {{ 'action.browse_app'|trans }}
+                        </a>
+                        <a href="{{ path('user_edit') }}" class="btn btn-outline-secondary">
+                            {{ 'action.go_to_profile'|trans }}
+                        </a>
+                    {% else %}
+                        <a href="{{ path('security_login') }}" class="btn btn-primary">
+                            {{ 'action.sign_in'|trans }}
+                        </a>
+                        <a href="{{ path('blog_index') }}" class="btn btn-outline-secondary">
+                            {{ 'action.browse_app'|trans }}
+                        </a>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

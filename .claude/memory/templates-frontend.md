@@ -858,3 +858,77 @@ Form buttons added in templates, not form classes
 | user/change_password.html.twig | Change password | Current password validation |
 | security/login.html.twig | Login | CSRF, remember-me, error display |
 | components/BlogSearchComponent.html.twig | Live search | Stimulus live component |
+---
+
+## Error Page Architecture
+
+### Location
+Error pages are located in `templates/bundles/TwigBundle/Exception/`:
+- `error.html.twig` - Generic error page (fallback)
+- `error403.html.twig` - Access Denied (Forbidden)
+- `error404.html.twig` - Page Not Found
+- `error500.html.twig` - Internal Server Error
+
+### Structure
+All error pages:
+- Extend `base.html.twig` for consistent branding
+- Override `{% block sidebar %}` to hide sidebar
+- Use translation keys for all text
+- Provide contextual navigation options
+- Use appropriate color schemes (danger, warning, primary)
+
+### Status Code Display
+- Prominently display HTTP status code (h1.display-1)
+- Show human-friendly title and description
+- Avoid technical jargon in production
+
+### Navigation Options
+Error pages should provide:
+- Link to homepage/blog index
+- Back button using `javascript:history.back()`
+- Context-specific actions (login for 403, search for 404)
+
+### Testing Error Pages
+In development mode, use Symfony's preview controller:
+```bash
+/_error/{statusCode}
+```
+
+Examples:
+- `/_error/403` - Preview 403 error
+- `/_error/404` - Preview 404 error
+- `/_error/500` - Preview 500 error
+
+### Translation Keys
+All error pages use `http_error_*.` translation keys:
+- `http_error_403.name`, `http_error_403.title`, `http_error_403.description`
+- `http_error_404.name`, `http_error_404.title`, `http_error_404.description`
+- `http_error_500.name`, `http_error_500.title`, `http_error_500.description`
+
+### Contextual Features by Error Type
+
+**403 (Access Denied)**:
+- Warning color scheme (yellow/orange)
+- Shows different buttons based on authentication state:
+  - Not logged in: Show "Sign in" and "Go to Homepage"
+  - Logged in: Show "Go to Homepage" and "Go to Profile"
+- Info alert with helpful explanation
+
+**404 (Page Not Found)**:
+- Primary color scheme (blue)
+- Most user-friendly messaging (not user's fault)
+- Multiple navigation options: homepage, search, back
+- Suggestion text for next steps
+
+**500 (Internal Server Error)**:
+- Danger color scheme (red)
+- Apologetic messaging (server's fault)
+- Danger alert with team notification message
+- Contact admin suggestion
+- Limited navigation options (may not be safe to navigate)
+
+**Generic Error**:
+- Falls back to generic template
+- Displays status code if available
+- Provides basic navigation options
+- Suitable for uncommon error codes (418, etc.)

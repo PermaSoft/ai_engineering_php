@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block page_title %}{{ 'http_error_404.name'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2 text-center">
+                <h1 class="display-1 text-primary">404</h1>
+                <h2 class="mb-4">{{ 'http_error_404.title'|trans }}</h2>
+
+                <p class="lead">
+                    {{ 'http_error_404.description'|trans }}
+                </p>
+
+                <hr class="my-4">
+
+                <p class="text-muted">
+                    {{ 'http_error_404.suggestion'|trans }}
+                </p>
+
+                <div class="mt-4">
+                    <a href="{{ path('blog_index') }}" class="btn btn-primary">
+                        {{ 'action.browse_app'|trans }}
+                    </a>
+                    <a href="{{ path('blog_search') }}" class="btn btn-outline-secondary">
+                        {{ 'action.search'|trans }}
+                    </a>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                        {{ 'action.back'|trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

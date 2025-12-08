@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block page_title %}{{ 'http_error.name'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2 text-center">
+                {% if status_code is defined %}
+                    <h1 class="display-1 text-danger">{{ status_code }}</h1>
+                {% else %}
+                    <h1 class="display-1 text-danger">Error</h1>
+                {% endif %}
+
+                <p class="lead">
+                    {{ 'http_error.description'|trans }}
+                </p>
+
+                {% if status_text is defined %}
+                    <p class="text-muted">{{ status_text }}</p>
+                {% endif %}
+
+                <hr class="my-4">
+
+                <p>
+                    <a href="{{ path('blog_index') }}" class="btn btn-primary">
+                        {{ 'action.browse_app'|trans }}
+                    </a>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                        {{ 'action.back'|trans }}
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
