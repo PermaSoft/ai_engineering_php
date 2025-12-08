@@ -6,22 +6,27 @@ Complete testing approach, patterns, and test coverage.
 
 ```
 tests/
+├── AbstractCommandTestCase.php         # Base class for command tests
+├── bootstrap.php                       # Test bootstrap
 ├── Controller/
-│   ├── DefaultControllerTest.php       # Homepage smoke tests
+│   ├── ApplicationAvailabilityTest.php # Smoke tests for all URLs
 │   ├── BlogControllerTest.php          # Blog functionality
+│   ├── CommentControllerTest.php       # Comment functionality
+│   ├── SecurityControllerTest.php      # Login/logout
 │   ├── UserControllerTest.php          # User profile
 │   └── Admin/
-│       └── BlogControllerTest.php      # Admin CRUD
+│       └── PostControllerTest.php      # Admin CRUD
 ├── Command/
-│   ├── AbstractCommandTestCase.php     # Base class for command tests
-│   ├── AddUserCommandTest.php          # User creation command
-│   └── ListUsersCommandTest.php        # List users command
+│   ├── AddUserCommandTest.php          # User creation command (TODO: Plan 09)
+│   └── ListUsersCommandTest.php        # List users command (TODO: Plan 09)
 ├── Form/
-│   └── Type/
-│       └── DataTransformer/
-│           └── TagArrayToStringTransformerTest.php
-└── Utils/
-    └── ValidatorTest.php                # Validator utility tests
+│   └── DataTransformer/
+│       └── TagArrayToStringTransformerTest.php  # (TODO: Plan 10)
+├── Utils/
+│   ├── TestUtilities.php               # Factory methods for test data
+│   └── ValidatorTest.php               # Validator utility tests (TODO: Plan 10)
+└── Example/
+    └── InfrastructureTest.php          # Example test demonstrating infrastructure
 ```
 
 ---
@@ -96,6 +101,136 @@ Wraps each test in a database transaction and rolls back after test completes.
 - Fast execution (no truncate/recreate)
 
 **Configuration**: Automatic via PHPUnit extension
+
+---
+
+## Testing Infrastructure
+
+### AbstractCommandTestCase
+
+Base class for command tests located at `tests/AbstractCommandTestCase.php`.
+
+**Usage Example**:
+
+```php
+use App\Tests\AbstractCommandTestCase;
+
+class MyCommandTest extends AbstractCommandTestCase
+{
+    public function testCommand(): void
+    {
+        $tester = $this->executeCommandByName('app:my-command', [
+            'argument' => 'value',
+            '--option' => true,
+        ]);
+
+        $this->assertCommandIsSuccessful($tester);
+        $this->assertOutputContains($tester, 'Expected output');
+    }
+}
+```
+
+**Provided Methods**:
+- `executeCommand(Command $command, array $input, array $options)` - Execute command object
+- `executeCommandByName(string $name, array $input, array $options)` - Execute by command name
+- `assertOutputContains(CommandTester $tester, string $expected)` - Assert output contains string
+- `assertOutputNotContains(CommandTester $tester, string $expected)` - Assert output doesn't contain string
+- `assertCommandIsSuccessful(CommandTester $tester)` - Assert command succeeded
+- `assertCommandFailed(CommandTester $tester)` - Assert command failed
+
+### TestUtilities Factory Methods
+
+Located at `tests/Utils/TestUtilities.php`, provides factory methods for creating test data with sensible defaults.
+
+**Create Test User**:
+```php
+use App\Tests\Utils\TestUtilities;
+
+$user = TestUtilities::createUser($em, $hasher, [
+    'username' => 'testuser',
+    'email' => 'test@example.com',
+    'fullName' => 'Test User',
+    'password' => 'password',
+    'roles' => ['ROLE_USER'],
+]);
+```
+
+**Create Admin User**:
+```php
+$admin = TestUtilities::createAdmin($em, $hasher, [
+    'username' => 'admin',
+]);
+```
+
+**Create Test Post**:
+```php
+$post = TestUtilities::createPost($em, $author, [
+    'title' => 'Test Post',
+    'slug' => 'test-post',
+    'summary' => 'Summary',
+    'content' => 'Content with **markdown**',
+]);
+```
+
+**Create Test Tag**:
+```php
+$tag = TestUtilities::createTag($em, 'php');
+```
+
+**Create Test Comment**:
+```php
+$comment = TestUtilities::createComment($em, $post, $author, [
+    'content' => 'Test comment',
+]);
+```
+
+**Clear Database** (for tests outside DAMA transaction):
+```php
+TestUtilities::clearDatabase($em);
+```
+
+### Test Database
+
+- **Location**: `var/data_test.db` (SQLite)
+- **Bootstrap**: Automatically recreated on each test run
+- **Migrations**: Run automatically via `tests/bootstrap.php`
+- **Fixtures**: Loaded automatically via `tests/bootstrap.php`
+- **Isolation**: DAMA extension rolls back transactions after each test
+
+### Running Tests
+
+```bash
+# All tests
+php bin/phpunit
+
+# Specific test file
+php bin/phpunit tests/Controller/BlogControllerTest.php
+
+# With coverage HTML report
+php bin/phpunit --coverage-html var/coverage/html
+
+# With testdox output
+php bin/phpunit --testdox
+
+# Specific group
+php bin/phpunit --group slow
+```
+
+### Test Organization
+
+```
+tests/
+├── AbstractCommandTestCase.php    # Base for command tests
+├── bootstrap.php                  # Test bootstrap
+├── Utils/
+│   └── TestUtilities.php         # Factory methods
+├── Controller/                    # Functional tests
+├── Command/                       # Command tests
+├── Form/                          # Form tests
+├── Utils/                         # Unit tests
+└── Example/                       # Example tests
+    └── InfrastructureTest.php    # Infrastructure demo
+```
 
 ---
 
