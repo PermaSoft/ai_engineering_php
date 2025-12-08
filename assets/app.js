@@ -1,36 +1,21 @@
-/*
- * Main application entrypoint
- */
-
-// Start Stimulus application
+// start the Stimulus application
 import './bootstrap.js';
-
-// Import Bootstrap
-import 'bootstrap';
-
-// Import styles
 import './styles/app.scss';
+import 'highlight.js/styles/github-dark-dimmed.css';
+import 'lato-font/css/lato-font.css';
 
-// Import Turbo for fast page loads
-import '@hotwired/turbo';
+// loads the Bootstrap plugins
+import 'bootstrap/js/dist/alert';
+import 'bootstrap/js/dist/collapse';
+import 'bootstrap/js/dist/dropdown';
+import 'bootstrap/js/dist/tab';
+import 'bootstrap/js/dist/modal';
+import 'jquery'
 
-// Initialize syntax highlighting for code blocks
-import hljs from 'highlight.js';
-import 'highlight.js/styles/github.css';
+// loads the code syntax highlighting library
+import './js/highlight.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Highlight all code blocks
-    document.querySelectorAll('pre code').forEach((block) => {
-        hljs.highlightElement(block);
-    });
-});
+// Creates links to the Symfony documentation
+import './js/doclinks.js';
 
-// Re-highlight code blocks after Turbo navigation
-document.addEventListener('turbo:load', () => {
-    document.querySelectorAll('pre code').forEach((block) => {
-        hljs.highlightElement(block);
-    });
-});
-
-// Console welcome message
-console.log('Symfony Demo Application loaded');
+import './js/flatpicker.js';

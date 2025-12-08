@@ -145,6 +145,25 @@ can you run all validation tools from linter, compilation, unit test, other tes 
 
 Tests are passing, UI is broken
 
+```prompt-claude
+UI is broken. [Image #1]
+```
+
+Pasting image with Ctrl+V instead of Command+v
+
+![Image #1](img.png)
+
+Claude answer is be more specific, what is the issue ?
+
+```prompt-claude
+The website seems to be HTML only at least for headers, blogs and probably almost everywhere.
+Can you choose a design system close to the official demosite, as you may find in head of git branch `walkthrought` of this project?
+```
+```prompt-claude
+The language and user menu in the navbar does not show up
+```
+
+
 
 Symfony Demo Application
 ========================
