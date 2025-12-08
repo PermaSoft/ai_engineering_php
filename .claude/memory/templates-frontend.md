@@ -790,6 +790,267 @@ This downloads JavaScript packages from CDN into `assets/vendor/`
 
 ---
 
+## Enhanced Frontend Assets (Rebuilding Branch)
+
+### JavaScript Libraries
+
+#### Flatpickr Date Picker
+
+**Version**: 4.6.13
+**Purpose**: User-friendly date/time picker for form inputs
+
+**Import Map Entry**:
+```php
+'flatpickr' => [
+    'version' => '4.6.13',
+],
+```
+
+**Usage**: Integrated via Stimulus controller (`flatpickr_controller.js`)
+**Form Integration**: `DateTimePickerType` form field automatically applies Flatpickr
+
+#### Highlight.js Code Syntax
+
+**Version**: 11.9.0
+**Purpose**: Syntax highlighting for code blocks in blog post content
+
+**Import Map Entry**:
+```php
+'highlight.js' => [
+    'version' => '11.9.0',
+],
+```
+
+**Features**:
+- Automatically highlights `<pre><code>` blocks
+- Supports PHP, JavaScript, SQL, YAML, JSON, etc.
+- GitHub theme (light)
+- Initialized in `app.js`
+
+**Usage in app.js**:
+```javascript
+import hljs from 'highlight.js';
+hljs.highlightAll();
+```
+
+#### Tabler Icons
+
+**Version**: 2.44.0
+**Purpose**: Comprehensive icon library (25+ icons used)
+
+**Import Map Entry**:
+```php
+'@tabler/icons' => [
+    'version' => '2.44.0',
+],
+```
+
+**Common icons**:
+- `icon-pencil` - Edit action
+- `icon-trash` - Delete action
+- `icon-user` - User profile
+- `icon-plus` - Create new
+- `icon-arrow-left` - Back navigation
+- `icon-globe` - Language selector
+
+### JavaScript Entrypoints
+
+#### app.js (Main Application)
+
+**Location**: `assets/app.js`
+
+**Features**:
+- Bootstrap JavaScript initialization
+- Stimulus controllers registration
+- Highlight.js syntax highlighting
+- Turbo navigation
+
+**Contents**:
+```javascript
+import './stimulus_bootstrap.js';
+import 'bootstrap';
+import hljs from 'highlight.js';
+
+// Initialize syntax highlighting
+document.addEventListener('DOMContentLoaded', () => {
+    hljs.highlightAll();
+});
+```
+
+#### admin.js (Admin Panel)
+
+**Location**: `assets/admin.js`
+
+**Purpose**: Admin-specific JavaScript functionality
+
+**Features**:
+- Extends app.js functionality
+- Delete confirmation dialogs
+- Auto-hide success alerts (5 seconds)
+- Admin UI enhancements
+
+**Contents**:
+```javascript
+import './app.js';
+
+// Delete confirmation
+document.querySelectorAll('form[onsubmit*="confirm"]').forEach(form => {
+    form.addEventListener('submit', (e) => {
+        if (!confirm('Are you sure?')) {
+            e.preventDefault();
+        }
+    });
+});
+
+// Auto-hide alerts
+setTimeout(() => {
+    document.querySelectorAll('.alert-success').forEach(alert => {
+        alert.style.display = 'none';
+    });
+}, 5000);
+```
+
+**Template Usage**:
+```twig
+{# Admin templates use admin.js instead of app.js #}
+{{ importmap('admin') }}
+```
+
+### Stimulus Controllers
+
+Stimulus controllers provide interactive behavior without writing custom JavaScript.
+
+#### flatpickr_controller.js
+
+**Location**: `assets/controllers/flatpickr_controller.js`
+
+**Purpose**: Initialize Flatpickr date/time picker on form fields
+
+**Features**:
+- Automatic locale detection from current request
+- Time picker support via data attribute
+- Configurable date/time format
+- Accessible input field
+
+**Usage**:
+```html
+<input type="text"
+       data-controller="flatpickr"
+       data-flatpickr-enable-time-value="true">
+```
+
+**Implementation**:
+```javascript
+import { Controller } from '@hotwired/stimulus';
+import flatpickr from 'flatpickr';
+
+export default class extends Controller {
+    connect() {
+        const enableTime = this.element.dataset.flatpickrEnableTimeValue === 'true';
+
+        flatpickr(this.element, {
+            enableTime: enableTime,
+            dateFormat: enableTime ? 'Y-m-d H:i' : 'Y-m-d',
+            time_24hr: true,
+        });
+    }
+}
+```
+
+#### csrf_controller.js
+
+**Location**: `assets/controllers/csrf_controller.js`
+
+**Purpose**: Handle CSRF tokens for AJAX requests
+
+**Features**:
+- Automatic token injection into fetch requests
+- Token refresh mechanism
+- Integration with Symfony CSRF protection
+
+**Usage**:
+```html
+<div data-controller="csrf" data-csrf-token-value="{{ csrf_token('ajax') }}">
+    <!-- AJAX content here -->
+</div>
+```
+
+#### login_controller.js
+
+**Location**: `assets/controllers/login_controller.js`
+
+**Purpose**: Enhance login form UX
+
+**Features**:
+- Remember last username (localStorage)
+- Auto-focus on appropriate field
+- Show/hide password toggle
+- Loading state management
+
+**Usage**:
+```html
+<form data-controller="login">
+    <input type="text" name="_username" data-login-target="username">
+    <input type="password" name="_password" data-login-target="password">
+</form>
+```
+
+### SCSS Stylesheets
+
+#### assets/styles/app.scss (Main Stylesheet)
+
+**Imports**:
+- Bootstrap core
+- Bootstrap Icons
+- Custom variables
+- RTL support
+- Theme overrides
+
+**Structure**:
+```scss
+@import 'bootstrap/scss/bootstrap';
+@import 'variables';
+@import 'rtl';
+@import 'theme';
+```
+
+#### assets/styles/_rtl.scss (RTL Support)
+
+**Purpose**: Right-to-left layout for Arabic, Farsi, Hebrew
+
+**Features**:
+- Direction and text-align reversal
+- Float direction (start/end) reversal
+- Margin/padding reversal (ms/me, ps/pe)
+- Dropdown positioning adjustments
+- Navbar alignment fixes
+- Border side reversal
+
+**Example**:
+```scss
+[dir="rtl"] {
+    text-align: right;
+    direction: rtl;
+
+    .dropdown-menu {
+        left: auto !important;
+        right: 0 !important;
+    }
+}
+```
+
+#### assets/styles/_theme.scss (Theme Overrides)
+
+**Purpose**: Custom theme adjustments and branding
+
+**Features**:
+- Color palette customization
+- Typography adjustments
+- Component-specific overrides
+- Dark mode variables (if implemented)
+
+---
+
 ## Best Practices Applied
 
 ### ✅ Snake Case File Names
@@ -1172,19 +1433,20 @@ Blog partials are in `templates/blog/`:
 
 ## Internationalization (i18n)
 
-Complete multi-language support with 30 locales.
+Complete multi-language support with 38 locales.
 
 ### Supported Locales
 
-**30 Languages:**
-- ar (Arabic), bg (Bulgarian), bs (Bosnian), ca (Catalan)
-- cs (Czech), de (German), en (English), es (Spanish)
-- eu (Basque), fr (French), hr (Croatian), id (Indonesian)
-- it (Italian), ja (Japanese), lt (Lithuanian), ne (Nepali)
-- nl (Dutch), pl (Polish), pt_BR (Brazilian Portuguese), ro (Romanian)
+**38 Languages:**
+- ar (Arabic), be (Belarusian), bg (Bulgarian), bs (Bosnian), ca (Catalan)
+- cs (Czech), de (German), el (Greek), en (English), es (Spanish)
+- eu (Basque), fa (Farsi/Persian), fr (French), hr (Croatian), hu (Hungarian)
+- id (Indonesian), it (Italian), ja (Japanese), lt (Lithuanian), ne (Nepali)
+- nl (Dutch), pl (Polish), pt (Portuguese), pt_BR (Brazilian Portuguese), ro (Romanian)
 - ru (Russian), sk (Slovak), sl (Slovenian), sq (Albanian)
 - sr_Cyrl (Serbian Cyrillic), sr_Latn (Serbian Latin)
-- tr (Turkish), uk (Ukrainian), vi (Vietnamese), zh_CN (Chinese Simplified)
+- tr (Turkish), uk (Ukrainian), vi (Vietnamese)
+- zh_CN (Chinese Simplified), zh_TW (Chinese Traditional)
 
 **Configuration:**
 - `config/services.yaml`: `app.supported_locales` parameter (pipe-separated)
@@ -1196,7 +1458,7 @@ Complete multi-language support with 30 locales.
 **Location**: `templates/default/_language_selector.html.twig`
 
 **Features:**
-- Dropdown with all 30 languages in native names
+- Dropdown with all 38 languages in native names
 - Globe icon (SVG)
 - Shows current language
 - Highlights active language
@@ -1218,12 +1480,12 @@ Complete multi-language support with 30 locales.
 
 ### RTL (Right-to-Left) Support
 
-**Enabled for**: Arabic (ar)
+**Enabled for**: Arabic (ar), Farsi/Persian (fa), Hebrew (he)
 
 **Base template HTML tag:**
 ```twig
 <html lang="{{ app.request.locale }}"
-      dir="{% if app.request.locale == 'ar' %}rtl{% else %}ltr{% endif %}">
+      dir="{% if app.request.locale in ['ar', 'fa', 'he'] %}rtl{% else %}ltr{% endif %}">
 ```
 
 **RTL CSS**: `assets/styles/_rtl.scss`

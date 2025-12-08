@@ -105,7 +105,30 @@ public function index(Request $request, int $page, string $_format, PostReposito
 #[Route('/rss.xml', name: 'blog_rss', defaults: ['page' => '1', '_format' => 'xml'], methods: ['GET'])]
 ```
 
-Shares same `index()` method, uses XML format template.
+**Implementation**:
+- Shares same `index()` method as HTML blog index
+- Uses `_format` routing parameter to determine template format
+- Renders `templates/blog/index.xml.twig` instead of `index.html.twig`
+- Returns RSS 2.0 compliant XML feed
+
+**Template**: `templates/blog/index.xml.twig`
+- RSS 2.0 format with Atom namespace for self-link
+- Includes channel metadata (title, description, link, language)
+- Each post as an `<item>` with title, link, description, pubDate
+- Post tags included as `<category>` elements
+- Author information in each item
+- Absolute URLs generated with `url()` function
+- RFC 2822 date format for `<pubDate>`
+
+**Auto-Discovery**:
+The RSS feed is advertised in the HTML `<head>` section via:
+```html
+<link rel="alternate" type="application/rss+xml"
+      title="Symfony Demo Blog"
+      href="{{ url('blog_rss') }}">
+```
+
+This enables browsers and feed readers to automatically detect the RSS feed.
 
 #### Single Post View
 

@@ -378,11 +378,18 @@ Two fields must match, validated automatically.
 
 **Location**: `src/Form/Type/DateTimePickerType.php`
 
-Custom datetime input field for publish date selection.
+Custom datetime input field for publish date selection with Flatpickr integration.
 
 ```php
 final class DateTimePickerType extends AbstractType
 {
+    public function buildView(FormView $view, FormInterface $form, array $options): void
+    {
+        // Add Stimulus controller for Flatpickr initialization
+        $view->vars['attr']['data-controller'] = 'flatpickr';
+        $view->vars['attr']['data-flatpickr-enable-time-value'] = 'true';
+    }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -400,13 +407,22 @@ final class DateTimePickerType extends AbstractType
 **Features**:
 - Extends `DateTimeType`
 - Single text input (not 3 dropdowns)
-- HTML5 datetime input
+- **Flatpickr date/time picker** via Stimulus controller
+- Automatic locale detection from current request
+- Time selection enabled
+- User-friendly calendar interface
+
+**Frontend Integration**:
+The `data-controller="flatpickr"` attribute triggers the Stimulus controller (`assets/controllers/flatpickr_controller.js`) which initializes Flatpickr with:
+- Current locale support
+- Time picker enabled
+- Date/time format customization
 
 ### TagsInputType
 
 **Location**: `src/Form/Type/TagsInputType.php`
 
-Custom field for comma-separated tags input.
+Custom field for comma-separated tags input with autocomplete support.
 
 ```php
 final class TagsInputType extends AbstractType
@@ -421,6 +437,12 @@ final class TagsInputType extends AbstractType
             ->addModelTransformer(new CollectionToArrayTransformer(), true)
             ->addModelTransformer(new TagArrayToStringTransformer($this->tags), true)
         ;
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options): void
+    {
+        // Fetch all available tags for autocomplete
+        $view->vars['tags'] = $this->tags->findAll();
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -443,11 +465,16 @@ final class TagsInputType extends AbstractType
 
 **Features**:
 - Text input for comma-separated tags
-- Two-way data transformation
-- Collection ↔ Array ↔ String
+- **Tag autocomplete** via `buildView()` method
+- Two-way data transformation: Collection ↔ Array ↔ String
+- All available tags passed to template for autocomplete widget
+- Optimized transformer (single query, no N+1 problem)
 
 **Input**: "lorem, ipsum, dolor"
 **Output**: Collection of Tag entities
+
+**Frontend Integration**:
+The `buildView()` method makes all existing tags available to the template (`{{ tags }}` variable), enabling JavaScript autocomplete widgets to suggest existing tags as the user types.
 
 ---
 
@@ -457,7 +484,7 @@ final class TagsInputType extends AbstractType
 
 **Location**: `src/Form/Type/DataTransformer/TagArrayToStringTransformer.php`
 
-Transforms between array of Tag entities and comma-separated string.
+Transforms between array of Tag entities and comma-separated string with optimized database queries.
 
 ```php
 final class TagArrayToStringTransformer implements DataTransformerInterface
@@ -485,8 +512,13 @@ final class TagArrayToStringTransformer implements DataTransformerInterface
 
         $names = array_filter(array_unique(array_map('trim', explode(',', $string))));
 
-        return array_map(function ($name) {
-            return $this->tags->findOneBy(['name' => $name]) ?? new Tag($name);
+        // Optimized: Fetch all tags in single query to avoid N+1 problem
+        $existingTags = $this->tags->findBy(['name' => $names]);
+        $existingNames = array_map(fn(Tag $tag) => $tag->getName(), $existingTags);
+
+        return array_map(function ($name) use ($existingTags, $existingNames) {
+            $index = array_search($name, $existingNames, true);
+            return $index !== false ? $existingTags[$index] : new Tag($name);
         }, $names);
     }
 }
@@ -499,7 +531,11 @@ final class TagArrayToStringTransformer implements DataTransformerInterface
 - `"lorem, ipsum, dolor"` → `[Tag("lorem"), Tag("ipsum"), Tag("dolor")]`
 - Trims whitespace
 - Removes duplicates
-- Creates new Tag if not found
+- **Optimized database query**: Fetches all tags in single query instead of N queries
+- Creates new Tag if not found in database
+
+**Performance Optimization**:
+The transformer uses `findBy(['name' => $names])` to fetch all requested tags in a single database query, eliminating the N+1 query problem that would occur if querying each tag individually in a loop.
 
 ### CollectionToArrayTransformer
 

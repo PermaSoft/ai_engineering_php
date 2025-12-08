@@ -422,6 +422,164 @@ services:
             string $sender: '%app.notifications.email_sender%'
 ```
 
+**Translation Support**:
+The subscriber now uses `TranslatorInterface` to send localized email notifications in the post author's preferred language.
+
+---
+
+### CheckRequirementsSubscriber
+
+**Location**: `src/EventSubscriber/CheckRequirementsSubscriber.php`
+
+Event listener that validates PHP and Symfony versions on kernel requests.
+
+```php
+final readonly class CheckRequirementsSubscriber implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::REQUEST => 'onKernelRequest',
+        ];
+    }
+
+    public function onKernelRequest(RequestEvent $event): void
+    {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
+        // Check PHP version (requires 8.2+)
+        if (\PHP_VERSION_ID < 80200) {
+            throw new \RuntimeException('PHP 8.2 or higher is required.');
+        }
+
+        // Check Symfony version (requires 7.2+)
+        if (Kernel::VERSION_ID < 70200) {
+            throw new \RuntimeException('Symfony 7.2 or higher is required.');
+        }
+    }
+}
+```
+
+**Features**:
+- Runs on every main request
+- Validates minimum PHP version (8.2+)
+- Validates minimum Symfony version (7.2+)
+- Throws exception if requirements not met
+- Ensures application only runs in supported environments
+
+---
+
+### ControllerSubscriber
+
+**Location**: `src/EventSubscriber/ControllerSubscriber.php`
+
+Event listener that injects global template variables into all controller responses.
+
+```php
+final readonly class ControllerSubscriber implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::CONTROLLER_ARGUMENTS => 'onKernelControllerArguments',
+        ];
+    }
+
+    public function onKernelControllerArguments(ControllerArgumentsEvent $event): void
+    {
+        $controller = $event->getController();
+
+        if (!is_array($controller)) {
+            return;
+        }
+
+        // Add global template variables available to all templates
+        $event->getRequest()->attributes->set('_template_vars', [
+            'site_name' => 'Symfony Demo',
+            'symfony_version' => Kernel::VERSION,
+        ]);
+    }
+}
+```
+
+**Features**:
+- Runs before controller execution
+- Injects global template variables
+- Makes variables available to all Twig templates
+- Useful for site-wide configuration values
+- Can be accessed in templates via `{{ app.request.attributes.get('_template_vars') }}`
+
+---
+
+### RedirectToPreferredLocaleSubscriber
+
+**Location**: `src/EventSubscriber/RedirectToPreferredLocaleSubscriber.php`
+
+Event listener that automatically detects and redirects to the user's preferred locale.
+
+```php
+final readonly class RedirectToPreferredLocaleSubscriber implements EventSubscriberInterface
+{
+    public function __construct(
+        private RouterInterface $router,
+        private string $defaultLocale = 'en',
+        private array $supportedLocales = ['en'],
+    ) {}
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::REQUEST => 'onKernelRequest',
+        ];
+    }
+
+    public function onKernelRequest(RequestEvent $event): void
+    {
+        $request = $event->getRequest();
+
+        // Only redirect homepage (root URL)
+        if ($request->getPathInfo() !== '/') {
+            return;
+        }
+
+        // Detect preferred locale from Accept-Language header
+        $preferredLocale = $request->getPreferredLanguage($this->supportedLocales);
+
+        // Redirect to localized homepage
+        $response = new RedirectResponse(
+            $this->router->generate('homepage', ['_locale' => $preferredLocale])
+        );
+        $event->setResponse($response);
+    }
+}
+```
+
+**Features**:
+- Detects browser language from `Accept-Language` HTTP header
+- Redirects root URL `/` to localized homepage `/{locale}/`
+- Falls back to default locale (en) if browser language not supported
+- Only affects homepage, not other URLs
+- Supports 38 languages (ar, be, bg, bs, ca, cs, de, el, en, es, eu, fa, fr, hr, hu, id, it, ja, lt, ne, nl, pl, pt, pt_BR, ro, ru, sk, sl, sq, sr_Cyrl, sr_Latn, tr, uk, vi, zh_CN, zh_TW)
+
+**Configuration**:
+The supported locales are configured in `config/services.yaml`:
+
+```yaml
+services:
+    App\EventSubscriber\RedirectToPreferredLocaleSubscriber:
+        arguments:
+            $defaultLocale: '%kernel.default_locale%'
+            $supportedLocales: '%app.supported_locales%'
+```
+
+**Example Flow**:
+1. User visits `https://example.com/`
+2. Browser sends `Accept-Language: fr-FR,fr;q=0.9,en;q=0.8`
+3. Subscriber detects French (fr) is supported
+4. Redirects to `https://example.com/fr/`
+
 ---
 
 ## Twig Extensions
