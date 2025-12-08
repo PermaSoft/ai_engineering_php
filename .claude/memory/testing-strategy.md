@@ -20,11 +20,11 @@ tests/
 │   ├── AddUserCommandTest.php          # User creation command (7 tests)
 │   └── ListUsersCommandTest.php        # List users command (5 tests)
 ├── Form/
-│   └── DataTransformer/
-│       └── TagArrayToStringTransformerTest.php  # (TODO: Plan 10)
+│   └── Type/
+│       └── DataTransformer/
+│           └── TagArrayToStringTransformerTest.php  # Form transformer tests (11 tests)
 ├── Utils/
-│   ├── TestUtilities.php               # Factory methods for test data
-│   └── ValidatorTest.php               # Validator utility tests (TODO: Plan 10)
+│   └── TestUtilities.php               # Factory methods for test data
 └── Example/
     └── InfrastructureTest.php          # Example test demonstrating infrastructure
 ```
