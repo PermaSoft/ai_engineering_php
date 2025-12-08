@@ -16,6 +16,10 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
+    'admin' => [
+        'path' => './assets/admin.js',
+        'entrypoint' => true,
+    ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],
@@ -40,6 +44,19 @@ return [
     ],
     'flatpickr/dist/flatpickr.min.css' => [
         'version' => '4.6.13',
+        'type' => 'css',
+    ],
+    'flatpickr/dist/l10n' => [
+        'version' => '4.6.13',
+    ],
+    '@tabler/icons' => [
+        'version' => '2.44.0',
+    ],
+    'highlight.js' => [
+        'version' => '11.9.0',
+    ],
+    'highlight.js/styles/github.css' => [
+        'version' => '11.9.0',
         'type' => 'css',
     ],
 ];
