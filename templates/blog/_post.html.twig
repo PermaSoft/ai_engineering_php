@@ -1,0 +1,59 @@
+{#
+    Displays a blog post summary or full content.
+
+    Parameters:
+        - post (required): Post entity
+        - show_full_content (optional, default: false): Whether to show full content
+#}
+
+<article class="post mb-4">
+    <header class="post-header mb-3">
+        <h2 class="post-title">
+            {% if show_full_content|default(false) %}
+                {{ post.title }}
+            {% else %}
+                <a href="{{ path('blog_post', {slug: post.slug}) }}">
+                    {{ post.title }}
+                </a>
+            {% endif %}
+        </h2>
+
+        <div class="post-metadata text-muted small">
+            <span>
+                {{ 'post.published_at'|trans }}
+                <time datetime="{{ post.publishedAt|date('Y-m-d H:i:s') }}">
+                    {{ post.publishedAt|format_datetime('long', 'short', locale=app.request.locale) }}
+                </time>
+            </span>
+            •
+            <span>
+                {{ 'post.author'|trans }}:
+                <strong>{{ post.author.fullName }}</strong>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content">
+        {% if show_full_content|default(false) %}
+            {{ post.content|markdown_to_html }}
+        {% else %}
+            {{ post.summary|markdown_to_html }}
+        {% endif %}
+    </div>
+
+    <footer class="post-footer mt-3">
+        {% include 'blog/_post_tags.html.twig' with {tags: post.tags} %}
+
+        {% if not show_full_content|default(false) %}
+            <div class="mt-2">
+                <a href="{{ path('blog_post', {slug: post.slug}) }}" class="btn btn-sm btn-primary">
+                    {{ 'action.read_more'|trans }}
+                </a>
+            </div>
+        {% endif %}
+    </footer>
+</article>
+
+{% if not loop.last|default(false) %}
+    <hr>
+{% endif %}

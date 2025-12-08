@@ -1,17 +1,43 @@
-{# Partial template for comment submission form #}
-<div style="background: white; padding: 1.5rem; border-radius: 0.25rem; border: 1px solid #dee2e6;">
-    <h3 style="margin-top: 0;">{{ 'title.add_comment'|trans({}, 'messages', app.request.locale)|default('Add a comment') }}</h3>
+{#
+    Displays comment submission form.
 
-    {{ form_start(form, {
-        'action': path('comment_new', {postSlug: post.slug}),
-        'attr': {'novalidate': 'novalidate'}
-    }) }}
-        {{ form_widget(form) }}
+    Parameters:
+        - form (required): Comment form instance
+        - post (required): Post entity (for form action)
+#}
 
-        <div style="margin-top: 1rem;">
-            <button type="submit" style="padding: 0.5rem 1.5rem; background: #0d6efd; color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 1rem;">
-                {{ 'action.publish_comment'|trans({}, 'messages', app.request.locale)|default('Publish comment') }}
-            </button>
-        </div>
-    {{ form_end(form) }}
+<div class="comment-form card">
+    <div class="card-header">
+        <h4 class="mb-0">{{ 'title.add_comment'|trans }}</h4>
+    </div>
+    <div class="card-body">
+        {{ form_start(form, {
+            'action': path('comment_new', {postSlug: post.slug}),
+            'attr': {'novalidate': 'novalidate'}
+        }) }}
+            <div class="mb-3">
+                {{ form_label(form.content) }}
+                {{ form_widget(form.content, {
+                    attr: {
+                        class: 'form-control',
+                        rows: 10,
+                        placeholder: 'help.comment_placeholder'|trans
+                    }
+                }) }}
+                {{ form_errors(form.content) }}
+                <div class="form-text">
+                    {{ 'help.markdown_enabled'|trans }}
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="form-text">
+                    {{ 'help.comment_moderation'|trans }}
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    {{ 'action.publish_comment'|trans }}
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
 </div>

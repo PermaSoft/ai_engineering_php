@@ -1,0 +1,17 @@
+{#
+    Displays tags for a post.
+
+    Parameters:
+        - tags (required): Collection of Tag entities
+#}
+
+{% if tags|length > 0 %}
+    <div class="post-tags">
+        {% for tag in tags %}
+            <a href="{{ path('blog_index', {tag: tag.name}) }}"
+               class="badge bg-secondary text-decoration-none me-1">
+                {{ tag.name }}
+            </a>
+        {% endfor %}
+    </div>
+{% endif %}

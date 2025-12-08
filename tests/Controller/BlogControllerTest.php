@@ -43,7 +43,7 @@ final class BlogControllerTest extends WebTestCase
         $client->request('GET', '/en/blog/posts/' . $post->getSlug());
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', $post->getTitle());
+        $this->assertSelectorTextContains('h2', $post->getTitle());
     }
 
     public function testTagFilter(): void

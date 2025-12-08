@@ -133,8 +133,13 @@ please review the application building already built (plan 01, 02, 03 and 04) by
 to use packmind mcp server. the mcp server was down and call failed, now you can see what updates are missing in packmind and add them. 
 ```
 
+```prompt-claude
+please rebuild the application, the documentation and packmind by following your plan in @.claude/comparison-fulfillment/README.md and @.claude/comparison-fulfillment/00-MASTER-PLAN.md , do each phase in order and check if your
+context window is low so you can continue, if your context widow usage is high,
+then we need to stop, clear context and rerun this prompt
+```
 
----
+/clear---
 
 Symfony Demo Application
 ========================

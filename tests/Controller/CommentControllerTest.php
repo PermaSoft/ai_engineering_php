@@ -84,6 +84,6 @@ final class CommentControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorNotExists('button:contains("Publish comment")');
-        $this->assertSelectorExists('a:contains("log in")');
+        $this->assertSelectorExists('a:contains("Sign in")');
     }
 }

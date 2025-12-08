@@ -27,6 +27,11 @@ title.quick_actions: 'Quick Actions'
 title.user_management: 'User Management'
 title.create_user: 'Create New User'
 title.danger_zone: 'Danger Zone'
+title.blog_index: 'Blog'
+title.blog_posts: 'Blog Posts'
+title.author: 'About the Author'
+title.admin_actions: 'Admin Actions'
+title.rss_feed: 'RSS Feed'
 
 # Actions
 action.create: 'Create'
@@ -54,6 +59,11 @@ action.search: 'Search'
 action.browse_documentation: 'Browse Documentation'
 action.back_to_blog: 'Back to Blog'
 action.create_user: 'Create User'
+action.read_more: 'Read more'
+action.subscribe_rss: 'Subscribe to RSS'
+action.edit_post: 'Edit Post'
+action.previous: 'Previous'
+action.next: 'Next'
 
 # Labels
 label.title: 'Title'
@@ -78,6 +88,10 @@ label.new_password_confirm: 'Confirm New Password'
 label.remember_me: 'Remember me'
 label.note: 'Note'
 label.error: 'Error'
+
+# Post-related translations
+post.published_at: 'Published on'
+post.author: 'Author'
 
 # Flash messages
 post.created_successfully: 'Post created successfully!'
@@ -122,6 +136,13 @@ help.password_requirements: 'Password requirements:'
 help.password_min_length: 'Minimum 6 characters'
 help.password_must_match: 'New password and confirmation must match'
 help.app_description: 'This is the official Symfony Demo application showcasing best practices for building web applications.'
+help.comment_placeholder: 'Write your comment here... (Markdown supported)'
+help.markdown_enabled: 'You can use Markdown to format your comment.'
+help.comment_moderation: 'Comments are moderated and may not appear immediately.'
+help.rss_description: 'Subscribe to our RSS feed to get notified of new blog posts.'
+help.sign_in_to_comment: 'to post a comment.'
+help.filtered_by_tag: 'Filtered by tag'
+help.page: 'Page'
 
 # Errors
 error.comment_validation_failed: 'There was a problem with your comment:'

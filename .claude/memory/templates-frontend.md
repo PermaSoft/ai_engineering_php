@@ -14,7 +14,11 @@ templates/
 │   ├── index.xml.twig              # RSS feed (XML)
 │   ├── post_show.html.twig         # Single post view
 │   ├── search.html.twig            # Search page
+│   ├── _post.html.twig             # Post display partial (summary/full)
+│   ├── _post_tags.html.twig        # Tag list display
+│   ├── _comment.html.twig          # Single comment display
 │   ├── _comment_form.html.twig     # Comment form partial
+│   ├── _rss.html.twig              # RSS feed link component
 │   └── comment_form_error.html.twig # Comment validation errors
 ├── admin/blog/
 │   ├── index.html.twig             # Admin post list
@@ -1052,3 +1056,114 @@ Or hidden (error pages):
 ```twig
 {% block sidebar %}{% endblock %}
 ```
+
+---
+
+## Blog Template Partials
+
+Blog partials follow the DRY principle, eliminating code duplication and improving maintainability.
+
+### Partial Files Location
+
+Blog partials are in `templates/blog/`:
+- `_post.html.twig` - Post display (summary or full)
+- `_post_tags.html.twig` - Tag list display
+- `_comment.html.twig` - Single comment display
+- `_comment_form.html.twig` - Comment submission form
+- `_rss.html.twig` - RSS feed link component
+
+### Partial Naming Convention
+
+- Prefix with underscore (`_`) to indicate partial template
+- Use lowercase with underscores (snake_case)
+
+### Post Partial Usage
+
+**Display post summary:**
+```twig
+{% include 'blog/_post.html.twig' with {
+    post: post,
+    show_full_content: false
+} %}
+```
+
+**Display full post:**
+```twig
+{% include 'blog/_post.html.twig' with {
+    post: post,
+    show_full_content: true
+} %}
+```
+
+**Features:**
+- Flexible display (summary or full content)
+- Proper semantic HTML5 (article, header, footer)
+- Formatted publication date with locale support
+- Markdown rendering
+- Includes tag display partial
+- "Read more" button for summaries
+- Horizontal rule between posts
+
+### Tag Partial Usage
+
+```twig
+{% include 'blog/_post_tags.html.twig' with {tags: post.tags} %}
+```
+
+**Features:**
+- Only renders if tags exist
+- Clickable badges that filter by tag
+- Bootstrap 5 badge styling
+- Proper spacing between tags
+
+### Comment Partial Usage
+
+**Display comment:**
+```twig
+{% include 'blog/_comment.html.twig' with {comment: comment} %}
+```
+
+**Features:**
+- Semantic HTML with proper structure
+- Visual left border for hierarchy
+- Author name and email
+- Formatted timestamp with locale
+- Markdown rendering for comment content
+- Anchor ID for direct linking
+
+**Display comment form:**
+```twig
+{% include 'blog/_comment_form.html.twig' with {form: commentForm, post: post} %}
+```
+
+**Features:**
+- Card layout for visual separation
+- Helpful placeholder text
+- Markdown hint
+- Comment moderation notice
+- Proper Bootstrap 5 form styling
+- Translation keys throughout
+
+### RSS Link Usage (Sidebar)
+
+```twig
+{% block sidebar %}
+    {{ parent() }}
+    {% include 'blog/_rss.html.twig' %}
+{% endblock %}
+```
+
+**Features:**
+- Card format for sidebar
+- RSS icon (Bootstrap Icons)
+- Warning color (orange/yellow)
+- Descriptive help text
+- Full-width button
+
+### Benefits of Partials
+
+- **DRY principle** - Don't Repeat Yourself
+- **Easier maintenance** - Change in one place
+- **Testable in isolation** - Each partial can be tested independently
+- **Reusable across templates** - Use in multiple places
+- **Clear separation of concerns** - Each partial has a single responsibility
