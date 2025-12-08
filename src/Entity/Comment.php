@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use function Symfony\Component\String\u;
@@ -14,14 +15,14 @@ final class Comment
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Post $post = null;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: 'comment.blank')]
     #[Assert\Length(
         min: 5,
@@ -31,7 +32,7 @@ final class Comment
     )]
     private ?string $content = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $publishedAt;
 
     #[ORM\ManyToOne(targetEntity: User::class)]

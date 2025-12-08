@@ -348,3 +348,93 @@ When recreating this application:
 5. Generate migration: `php bin/console make:migration`
 6. Run migration: `php bin/console doctrine:migrations:migrate`
 7. Load fixtures: `php bin/console doctrine:fixtures:load`
+
+---
+
+## Entity Implementation Best Practices
+
+### Doctrine Column Type Constants
+
+**Rule**: Always use `Doctrine\DBAL\Types\Types` constants instead of string literals for column types.
+
+**Rationale**: 
+- Prevents typos that would only be caught at runtime
+- Provides IDE autocompletion and type safety
+- Makes refactoring easier and safer
+- Aligns with Symfony and Doctrine best practices
+
+**Implementation**:
+
+```php
+use Doctrine\DBAL\Types\Types;
+
+// ✓ CORRECT - Use Types constants
+#[ORM\Column(type: Types::STRING)]
+private ?string $title = null;
+
+#[ORM\Column(type: Types::TEXT)]
+private ?string $content = null;
+
+#[ORM\Column(type: Types::INTEGER)]
+private ?int $id = null;
+
+#[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+private ?\DateTimeImmutable $publishedAt = null;
+
+#[ORM\Column(type: Types::JSON)]
+private array $roles = [];
+
+// ✗ INCORRECT - String literals
+#[ORM\Column(type: 'string')]
+#[ORM\Column(type: 'text')]
+#[ORM\Column(type: 'integer')]
+#[ORM\Column(type: 'datetime_immutable')]
+#[ORM\Column(type: 'json')]
+```
+
+**Common Type Constants**:
+- `Types::STRING` - VARCHAR(255)
+- `Types::TEXT` - TEXT (unlimited length)
+- `Types::INTEGER` - INT
+- `Types::DATETIME_IMMUTABLE` - DATETIME (immutable)
+- `Types::JSON` - JSON column
+- `Types::BOOLEAN` - BOOLEAN/TINYINT
+
+### Null-Safety in Security Methods
+
+**Rule**: Cast potentially null values to string when implementing security interfaces.
+
+**Example - User::getUserIdentifier()**:
+
+```php
+// ✓ CORRECT - Safe cast prevents runtime errors
+public function getUserIdentifier(): string
+{
+    return (string) $this->username;
+}
+
+// ✗ INCORRECT - Can return null, violates contract
+public function getUserIdentifier(): string
+{
+    return $this->username;  // Runtime error if null!
+}
+```
+
+**Rationale**:
+- `getUserIdentifier()` must return `string`, never `null`
+- During entity construction, `$username` might be temporarily null
+- Cast to string ensures contract is never violated
+- Prevents "Return value must be of type string, null returned" errors
+
+### Entity Quality Checklist
+
+When creating or reviewing entities:
+
+- [ ] Import `use Doctrine\DBAL\Types\Types;`
+- [ ] All `#[ORM\Column(type: ...)]` use Types constants
+- [ ] Security interface methods have null-safety casts
+- [ ] Properties have correct type hints (nullable vs non-nullable)
+- [ ] Collections initialized in constructor
+- [ ] Validation constraints present on properties
+- [ ] Class marked as `final` unless designed for extension
+- [ ] `declare(strict_types=1)` at top of file
