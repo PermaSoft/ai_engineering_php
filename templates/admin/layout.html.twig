@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block page_title %}{{ 'title.admin'|trans }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {# Admin Header #}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{% block admin_title %}{{ 'title.admin_panel'|trans }}{% endblock %}</h1>
+
+        {# Admin Navigation #}
+        <div class="btn-group" role="group">
+            <a href="{{ path('admin_post_index') }}" class="btn btn-sm btn-outline-primary">
+                {{ 'menu.posts'|trans }}
+            </a>
+            <a href="{{ path('admin_user_index') }}" class="btn btn-sm btn-outline-primary">
+                {{ 'menu.users'|trans }}
+            </a>
+            <a href="{{ path('blog_index') }}" class="btn btn-sm btn-outline-secondary">
+                {{ 'action.back_to_blog'|trans }}
+            </a>
+        </div>
+    </div>
+
+    {# Admin Content #}
+    {% block admin_content %}{% endblock %}
+{% endblock %}
+
+{% block sidebar %}
+    {# Admin pages typically don't need a sidebar, override if needed #}
+    <div class="card mb-3">
+        <div class="card-header">
+            {{ 'title.quick_actions'|trans }}
+        </div>
+        <div class="card-body">
+            <div class="d-grid gap-2">
+                <a href="{{ path('admin_post_new') }}" class="btn btn-sm btn-success">
+                    {{ 'action.create_post'|trans }}
+                </a>
+                <a href="{{ path('admin_user_new') }}" class="btn btn-sm btn-success">
+                    {{ 'action.create_user'|trans }}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {# Allow templates to add more sidebar content #}
+    {% block admin_sidebar %}{% endblock %}
+{% endblock %}

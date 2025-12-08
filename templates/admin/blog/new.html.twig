@@ -1,9 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/layout.html.twig' %}
 
-{% block title %}{{ 'title.create_post'|trans({}, 'messages', app.request.locale)|default('Create new post') }}{% endblock %}
+{% block page_title %}{{ 'title.create_post'|trans }}{% endblock %}
 
-{% block body %}
-    <h1>{{ 'title.create_post'|trans({}, 'messages', app.request.locale)|default('Create new post') }}</h1>
+{% block admin_title %}{{ 'title.create_post'|trans }}{% endblock %}
+
+{% block admin_content %}
 
     {{ form_start(form) }}
         <div style="background: white; padding: 2rem; border-radius: 0.25rem; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
@@ -32,4 +33,4 @@
             </div>
         </div>
     {{ form_end(form) }}
-{% endblock %}
+{% endblock admin_content %}

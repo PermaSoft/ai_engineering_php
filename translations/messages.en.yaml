@@ -1,9 +1,14 @@
 # Menu
 menu.homepage: 'Blog'
+menu.search: 'Search'
 menu.admin: 'Admin'
+menu.profile: 'Profile'
 menu.user_profile: 'Profile'
 menu.logout: 'Logout'
 menu.login: 'Login'
+menu.posts: 'Posts'
+menu.users: 'Users'
+menu.symfony_project: 'Symfony Project'
 
 # Titles
 title.admin_post_index: 'Post Management'
@@ -14,6 +19,12 @@ title.add_comment: 'Add a comment'
 title.edit_profile: 'Edit Profile'
 title.change_password: 'Change Password'
 title.security: 'Security'
+title.about: 'About'
+title.admin: 'Admin'
+title.admin_panel: 'Administration Panel'
+title.quick_actions: 'Quick Actions'
+title.user_management: 'User Management'
+title.create_user: 'Create New User'
 
 # Actions
 action.create_post: 'Create new post'
@@ -34,6 +45,9 @@ action.back: 'Go Back'
 action.go_to_profile: 'Go to Profile'
 action.sign_in: 'Sign in'
 action.search: 'Search'
+action.browse_documentation: 'Browse Documentation'
+action.back_to_blog: 'Back to Blog'
+action.create_user: 'Create User'
 
 # Labels
 label.title: 'Title'
@@ -94,6 +108,7 @@ help.password_change: 'Want to change your password?'
 help.password_requirements: 'Password requirements:'
 help.password_min_length: 'Minimum 6 characters'
 help.password_must_match: 'New password and confirmation must match'
+help.app_description: 'This is the official Symfony Demo application showcasing best practices for building web applications.'
 
 # Errors
 error.comment_validation_failed: 'There was a problem with your comment:'

@@ -1,14 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/layout.html.twig' %}
 
-{% block title %}{{ 'title.admin_post_index'|trans({}, 'messages', app.request.locale)|default('Post Management') }}{% endblock %}
+{% block page_title %}{{ 'title.admin_post_index'|trans }}{% endblock %}
 
-{% block body %}
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h1>{{ 'title.admin_post_index'|trans({}, 'messages', app.request.locale)|default('Post Management') }}</h1>
-        <a href="{{ path('admin_post_new') }}" style="padding: 0.5rem 1rem; background: #0d6efd; color: white; text-decoration: none; border-radius: 0.25rem;">
-            {{ 'action.create_post'|trans({}, 'messages', app.request.locale)|default('Create new post') }}
-        </a>
-    </div>
+{% block admin_title %}{{ 'title.admin_post_index'|trans }}{% endblock %}
+
+{% block admin_content %}
 
     {% if posts is empty %}
         <div style="padding: 2rem; text-align: center; background: #f8f9fa; border-radius: 0.25rem;">
@@ -59,4 +55,4 @@
             </tbody>
         </table>
     {% endif %}
-{% endblock %}
+{% endblock admin_content %}

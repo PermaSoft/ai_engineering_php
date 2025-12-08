@@ -932,3 +932,123 @@ All error pages use `http_error_*.` translation keys:
 - Displays status code if available
 - Provides basic navigation options
 - Suitable for uncommon error codes (418, etc.)
+
+---
+
+## Template Hierarchy
+
+### Three-Level Inheritance
+
+```
+base.html.twig (Foundation)
+├── admin/layout.html.twig (Admin-specific)
+│   ├── admin/blog/index.html.twig
+│   ├── admin/blog/edit.html.twig
+│   ├── admin/blog/show.html.twig
+│   ├── admin/blog/new.html.twig
+│   ├── admin/user/index.html.twig
+│   └── admin/user/new.html.twig
+├── blog/index.html.twig (Public pages)
+├── blog/post_show.html.twig
+└── user/edit.html.twig
+```
+
+### Base Template Structure
+
+**`templates/base.html.twig`** provides:
+- Fixed top navbar with responsive collapse
+- User authentication state (login/logout with dropdown menu)
+- Two-column layout (8/4 on medium, 9/3 on large screens)
+- Sidebar block for content-specific additions
+- Footer with copyright and Symfony link
+- Flash messages include via partial
+- Bootstrap 5 styling throughout
+
+### Admin Layout
+
+**`templates/admin/layout.html.twig`** extends base and adds:
+- Admin header with title
+- Admin navigation (posts, users, back to blog)
+- Quick actions sidebar (create post, create user)
+- `admin_content` block for page content
+- Override sidebar with admin-specific content
+- `admin_sidebar` block for additional sidebar items
+
+### Template Blocks
+
+Available blocks in base template:
+- `page_title` - Page title (shown in browser tab)
+- `stylesheets` - Additional CSS
+- `body` - Main content area (8-9 columns)
+- `sidebar` - Right sidebar content (4-3 columns)
+- `javascripts` - Additional JavaScript
+
+Admin template adds:
+- `admin_title` - Admin page heading (replaces h1 in content)
+- `admin_content` - Admin page content (inside body block)
+- `admin_sidebar` - Additional admin sidebar items
+
+### Flash Messages
+
+Flash messages are handled via `default/_flash_messages.html.twig` partial.
+Automatically displays all flash message types with Bootstrap 5 alerts.
+
+Features:
+- Dismissible alerts with close button
+- Automatic fade show animation
+- Translates message keys
+
+Supported types:
+- `success` - Green alert
+- `danger` - Red alert  
+- `warning` - Yellow alert
+- `info` - Blue alert
+
+Usage in controllers:
+```php
+$this->addFlash('success', 'message.translation.key');
+```
+
+### Navigation Bar
+
+The navbar includes:
+- Responsive collapse for mobile
+- Brand link to homepage
+- Blog and Search links
+- Admin link (only for ROLE_ADMIN)
+- User dropdown menu (when authenticated) with:
+  - Full name display
+  - Profile link
+  - Logout link
+- Login link (when not authenticated)
+
+All navigation uses Bootstrap 5 navbar classes and is fully responsive.
+
+### Two-Column Layout
+
+Pages use a responsive two-column layout:
+- Main content: `col-md-8 col-lg-9`
+- Sidebar: `col-md-4 col-lg-3`
+- Stacks vertically on mobile (< 768px)
+- Proper spacing with `mt-5 pt-4` for fixed navbar
+
+The sidebar can be overridden in any template:
+```twig
+{% block sidebar %}
+    {{ parent() }}  {# Include default about section #}
+    
+    {# Add custom sidebar content #}
+{% endblock %}
+```
+
+Or completely replaced:
+```twig
+{% block sidebar %}
+    {# Custom sidebar only #}
+{% endblock %}
+```
+
+Or hidden (error pages):
+```twig
+{% block sidebar %}{% endblock %}
+```

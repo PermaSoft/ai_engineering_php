@@ -1,37 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "mcp__packmind__list_standards",
-      "mcp__packmind__list_packages",
-      "mcp__packmind__create_standard",
-      "mcp__packmind__save_standard",
-      "Bash(composer create-project:*)",
-      "Bash(composer require:*)",
-      "Bash(find:*)",
-      "Bash(php bin/console doctrine:database:create:*)",
-      "Bash(php bin/console:*)",
-      "Bash(vendor/bin/phpstan:*)",
-      "Bash(cat:*)",
-      "Bash(php bin/phpunit:*)",
-      "Bash(php:*)",
-      "Bash(symfony serve:status:*)",
-      "Bash(symfony server:start:*)",
-      "Bash(curl:*)",
-      "Bash(symfony server:log:*)",
-      "Bash(symfony server:stop:*)",
-      "Bash(composer show:*)",
-      "Bash(sqlite3:*)",
-      "Bash(ls:*)",
-      "Bash(symfony server:status:*)",
-      "Bash(git ls-tree:*)",
-      "Bash(comm:*)",
-      "Bash(for i in {06..16})",
-      "Bash(do echo \"Creating plan $i...\")",
-      "Bash(done)",
-      "Bash(git add:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nfix: security hardening - CSRF, logout, remember-me, autocomplete\n\nSecurity improvements implemented:\n- Enable CSRF protection on logout\n- Logout user after password change (security best practice)\n- Make remember-me opt-in (unchecked by default)\n- Add autocomplete attributes to password fields\n- Add max length constraint (128) to passwords\n- Move switch_user to dev environment only\n\nUpdated tests to match new security behavior.\nUpdated memory documentation with security hardening checklist.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: add professional error pages (403, 404, 500)\n\nError pages implemented:\n- Generic error template with status code display\n- 403 Access Denied with contextual actions\n- 404 Not Found with search and navigation\n- 500 Server Error with apologetic messaging\n\nFeatures:\n- Extends base layout for consistent branding\n- Translation keys for all error messages\n- Contextual navigation based on user state\n- Appropriate color schemes (danger, warning, primary)\n- Hide sidebar on error pages\n- Testing via Symfony preview controller\n\nUpdated memory documentation with error page architecture.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git commit -m \"$(cat <<''EOF''\nrefactor: use Types constants in entities and add null-safety\n\nEntity improvements:\n- Replace string literals with Doctrine\\DBAL\\Types\\Types constants\n- Add null-safety cast to User::getUserIdentifier()\n- Improve code quality and IDE support\n\nChanges:\n- User entity: Types constants + null-safe getUserIdentifier()\n- Post entity: Types constants for all columns\n- Comment entity: Types constants for all columns\n- Tag entity: Types constants for all columns\n\nBenefits:\n- Prevents runtime typos in column type definitions\n- Better IDE autocompletion and refactoring support\n- Eliminates potential null return from getUserIdentifier()\n- Aligns with Symfony/Doctrine best practices\n\nAll tests passing (31/31).\nUpdated memory documentation with entity best practices.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,10 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/layout.html.twig' %}
 
-{% block title %}{{ 'title.user_management'|trans({}, 'messages', app.request.locale)|default('User Management') }}{% endblock %}
+{% block page_title %}{{ 'title.user_management'|trans }}{% endblock %}
 
-{% block body %}
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h1>{{ 'title.user_management'|trans({}, 'messages', app.request.locale)|default('User Management') }}</h1>
+{% block admin_title %}{{ 'title.user_management'|trans }}{% endblock %}
+
+{% block admin_content %}
         <a href="{{ path('admin_user_new') }}" style="padding: 0.5rem 1rem; background: #198754; color: white; text-decoration: none; border-radius: 0.25rem;">
             {{ 'action.create_user'|trans({}, 'messages', app.request.locale)|default('Create New User') }}
         </a>
@@ -70,4 +70,4 @@
             {{ 'help.login_as_feature'|trans({}, 'messages', app.request.locale)|default('Use the "Login As" feature to authenticate as any user for testing purposes. This is a demo feature.') }}
         </p>
     </div>
-{% endblock %}
+{% endblock admin_content %}

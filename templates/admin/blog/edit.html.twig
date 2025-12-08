@@ -1,10 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/layout.html.twig' %}
 
-{% block title %}{{ 'title.edit_post'|trans({}, 'messages', app.request.locale)|default('Edit post') }}{% endblock %}
+{% block page_title %}{{ 'title.edit_post'|trans }}{% endblock %}
 
-{% block body %}
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h1>{{ 'title.edit_post'|trans({}, 'messages', app.request.locale)|default('Edit post') }}</h1>
+{% block admin_title %}{{ 'title.edit_post'|trans }}{% endblock %}
+
+{% block admin_content %}
 
         {% if is_granted('delete', post) %}
             <form method="post" action="{{ path('admin_post_delete', {id: post.id}) }}" style="display: inline;" onsubmit="return confirm('{{ 'message.confirm_delete'|trans({}, 'messages', app.request.locale)|default('Are you sure you want to delete this post?') }}');">
@@ -38,4 +38,4 @@
             {{ post.publishedAt|date('Y-m-d H:i:s') }}
         </small>
     </div>
-{% endblock %}
+{% endblock admin_content %}

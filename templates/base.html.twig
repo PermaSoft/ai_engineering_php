@@ -1,73 +1,138 @@
 <!DOCTYPE html>
-<html lang="{{ app.request.locale|default('en') }}">
+<html lang="{{ app.request.locale }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Symfony Demo{% endblock %}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+
+    <title>{% block page_title %}Symfony Demo Application{% endblock %}</title>
+
     {% block stylesheets %}
-        {% if app.environment != 'test' %}
-            {{ importmap('app') }}
-        {% endif %}
+        {{ importmap('app') }}
     {% endblock %}
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
 </head>
+
 <body>
-    <header>
-        {% block header %}
-            <nav style="padding: 1rem; background: #f8f9fa; border-bottom: 1px solid #dee2e6;">
-                <div style="max-width: 1200px; margin: 0 auto; display: flex; gap: 2rem; align-items: center;">
-                    <a href="{{ path('homepage') }}" style="font-weight: bold; font-size: 1.25rem; text-decoration: none; color: #000;">
-                        Symfony Demo
-                    </a>
+    {# Navigation Bar #}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ path('homepage') }}">
+                <strong>Symfony</strong> Demo
+            </a>
 
-                    <div style="flex: 1; display: flex; gap: 1rem;">
-                        <a href="{{ path('blog_index') }}">{{ 'menu.homepage'|trans({}, 'messages', app.request.locale)|default('Blog') }}</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <a href="{{ path('admin_post_index')|default('#') }}">{{ 'menu.admin'|trans({}, 'messages', app.request.locale)|default('Admin') }}</a>
-                        {% endif %}
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('blog_index') }}">
+                            {{ 'menu.homepage'|trans }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('blog_search') }}">
+                            {{ 'menu.search'|trans }}
+                        </a>
+                    </li>
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('admin_post_index') }}">
+                                {{ 'menu.admin'|trans }}
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if app.user %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ app.user.fullName }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{{ path('user_edit') }}">
+                                        {{ 'menu.profile'|trans }}
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ path('security_logout') }}">
+                                        {{ 'menu.logout'|trans }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('security_login') }}">
+                                {{ 'menu.login'|trans }}
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {# Main Content Area with Sidebar #}
+    <div class="container mt-5 pt-4">
+        {# Flash Messages #}
+        {% include 'default/_flash_messages.html.twig' %}
+
+        <div class="row">
+            {# Main Content #}
+            <div class="col-md-8 col-lg-9">
+                {% block body %}{% endblock %}
+            </div>
+
+            {# Sidebar #}
+            <div class="col-md-4 col-lg-3">
+                {% block sidebar %}
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            {{ 'title.about'|trans }}
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                {{ 'help.app_description'|trans }}
+                            </p>
+                            <a href="https://symfony.com/doc" class="btn btn-sm btn-primary w-100" target="_blank">
+                                {{ 'action.browse_documentation'|trans }}
+                            </a>
+                        </div>
                     </div>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
 
-                    <div style="display: flex; gap: 1rem; align-items: center;">
-                        {% if app.user %}
-                            <span>{{ app.user.fullName }}</span>
-                            <a href="{{ path('user_edit')|default('#') }}">{{ 'menu.user_profile'|trans({}, 'messages', app.request.locale)|default('Profile') }}</a>
-                            <a href="{{ path('security_logout') }}">{{ 'menu.logout'|trans({}, 'messages', app.request.locale)|default('Logout') }}</a>
-                        {% else %}
-                            <a href="{{ path('security_login') }}">{{ 'menu.login'|trans({}, 'messages', app.request.locale)|default('Login') }}</a>
-                        {% endif %}
-                    </div>
+    {# Footer #}
+    <footer class="bg-light mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="text-muted mb-0">
+                        &copy; {{ 'now'|date('Y') }} Symfony Demo Application
+                    </p>
                 </div>
-            </nav>
-        {% endblock %}
-    </header>
-
-    <main style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem;">
-        {% for message in app.flashes('success') %}
-            <div style="padding: 1rem; margin-bottom: 1rem; background: #d1e7dd; border: 1px solid #0f5132; border-radius: 0.25rem; color: #0f5132;">
-                {{ message }}
+                <div class="col-md-6 text-end">
+                    <a href="https://symfony.com" class="text-muted text-decoration-none" target="_blank">
+                        {{ 'menu.symfony_project'|trans }}
+                    </a>
+                </div>
             </div>
-        {% endfor %}
-
-        {% for message in app.flashes('error') %}
-            <div style="padding: 1rem; margin-bottom: 1rem; background: #f8d7da; border: 1px solid #842029; border-radius: 0.25rem; color: #842029;">
-                {{ message }}
-            </div>
-        {% endfor %}
-
-        {% block body %}{% endblock %}
-    </main>
-
-    <footer style="margin-top: 3rem; padding: 2rem 1rem; background: #f8f9fa; border-top: 1px solid #dee2e6; text-align: center;">
-        {% block footer %}
-            <p>&copy; {{ 'now'|date('Y') }} Symfony Demo</p>
-        {% endblock %}
+        </div>
     </footer>
 
     {% block javascripts %}
-        {% if app.environment != 'test' %}
-            {{ importmap('app') }}
-        {% endif %}
+        {{ importmap('app') }}
     {% endblock %}
 </body>
 </html>

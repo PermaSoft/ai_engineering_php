@@ -1,10 +1,11 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/layout.html.twig' %}
 
-{% block title %}{{ 'title.create_user'|trans({}, 'messages', app.request.locale)|default('Create New User') }}{% endblock %}
+{% block page_title %}{{ 'title.create_user'|trans }}{% endblock %}
 
-{% block body %}
+{% block admin_title %}{{ 'title.create_user'|trans }}{% endblock %}
+
+{% block admin_content %}
     <div style="max-width: 600px;">
-        <h1 style="margin-bottom: 2rem;">{{ 'title.create_user'|trans({}, 'messages', app.request.locale)|default('Create New User') }}</h1>
 
         {{ form_start(form) }}
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
@@ -60,4 +61,4 @@
             </div>
         {{ form_end(form) }}
     </div>
-{% endblock %}
+{% endblock admin_content %}

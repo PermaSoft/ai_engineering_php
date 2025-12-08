@@ -1,10 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/layout.html.twig' %}
 
-{% block title %}{{ post.title }}{% endblock %}
+{% block page_title %}{{ post.title }}{% endblock %}
 
-{% block body %}
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h1>{{ post.title }}</h1>
+{% block admin_title %}{{ post.title }}{% endblock %}
+
+{% block admin_content %}
 
         <div style="display: flex; gap: 0.5rem;">
             {% if is_granted('edit', post) %}
@@ -88,4 +88,4 @@
             ← {{ 'action.back_to_list'|trans({}, 'messages', app.request.locale)|default('Back to post list') }}
         </a>
     </div>
-{% endblock %}
+{% endblock admin_content %}
