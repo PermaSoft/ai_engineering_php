@@ -1,0 +1,7 @@
+{# Delete confirmation form with CSRF protection #}
+<form method="post" action="{{ path('admin_post_delete', {id: post.id}) }}" onsubmit="return confirm('{{ 'action.delete_confirmation'|trans }}');">
+    <input type="hidden" name="token" value="{{ csrf_token('delete') }}">
+    <button type="submit" class="btn btn-danger">
+        {{ button_label|default('action.delete'|trans) }}
+    </button>
+</form>

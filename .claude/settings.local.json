@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "mcp__packmind__get_standard_details",
+      "mcp__packmind__create_standard_rule",
+      "mcp__packmind__save_standard_rule"
     ],
     "deny": [],
     "ask": []

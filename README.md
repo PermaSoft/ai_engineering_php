@@ -123,6 +123,16 @@ please rebuild the application by following your plan in @.claude/comparison-ful
 continue, if your context widow usage is high,
 then we need to stop, clear context and rerun this prompt
 ```
+Oupsy, after PC restart, I did not restart Docker and Packmind...
+```prompt-claude
+In previous plan, there was some calls to packmind mcp server that failed as it was down. I started this mcp server, if you can replay the calls needed, please do so.
+```
+I cleared the context, so do it another way.
+```prompt-claude
+please review the application building already built (plan 01, 02, 03 and 04) by following your plan in @.claude/comparison-fulfillment/README.md and @.claude/comparison-fulfillment/00-MASTER-PLAN.md , and seek where you wanted 
+to use packmind mcp server. the mcp server was down and call failed, now you can see what updates are missing in packmind and add them. 
+```
+
 
 ---
 

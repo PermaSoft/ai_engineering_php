@@ -126,8 +126,8 @@ final class PostControllerTest extends WebTestCase
 
         $client->loginUser($admin);
 
-        // Visit the index page to get the delete form with CSRF token
-        $crawler = $client->request('GET', '/en/admin/post/');
+        // Visit the edit page to get the delete form with CSRF token
+        $crawler = $client->request('GET', '/en/admin/post/' . $postId . '/edit');
         $this->assertResponseIsSuccessful();
 
         // Find the delete form for this specific post by matching the action URL

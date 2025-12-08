@@ -1,0 +1,48 @@
+{# Reusable blog post form partial #}
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    <div class="row">
+        <div class="col-md-8">
+            {{ form_row(form.title, {
+                'label': 'label.title'|trans,
+                'attr': {'autofocus': true}
+            }) }}
+
+            {{ form_row(form.summary, {
+                'label': 'label.summary'|trans,
+                'help': 'help.post_summary'|trans
+            }) }}
+
+            {{ form_row(form.content, {
+                'label': 'label.content'|trans,
+                'attr': {'rows': 20}
+            }) }}
+        </div>
+
+        <div class="col-md-4">
+            {{ form_row(form.publishedAt, {
+                'label': 'label.published_at'|trans
+            }) }}
+
+            {{ form_row(form.tags, {
+                'label': 'label.tags'|trans,
+                'help': 'help.post_tags'|trans
+            }) }}
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">
+                    {{ button_label|default('action.save'|trans) }}
+                </button>
+
+                {% if show_save_and_create_new|default(false) %}
+                    <button type="submit" name="saveAndCreateNew" class="btn btn-secondary">
+                        {{ 'action.save_and_create_new'|trans }}
+                    </button>
+                {% endif %}
+
+                <a href="{{ path('admin_post_index') }}" class="btn btn-outline-secondary">
+                    {{ 'action.cancel'|trans }}
+                </a>
+            </div>
+        </div>
+    </div>
+{{ form_end(form) }}
