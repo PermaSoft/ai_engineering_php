@@ -7,6 +7,11 @@
 
     <title>{% block page_title %}Symfony Demo Application{% endblock %}</title>
 
+    {# RSS Auto-discovery #}
+    <link rel="alternate" type="application/rss+xml"
+          title="{{ 'rss.title'|trans }}"
+          href="{{ url('blog_rss') }}">
+
     {% block stylesheets %}
         {{ importmap('app') }}
     {% endblock %}
