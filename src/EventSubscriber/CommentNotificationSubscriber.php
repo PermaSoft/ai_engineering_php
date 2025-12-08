@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace App\EventSubscriber;
 
 use App\Event\CommentCreatedEvent;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final readonly class CommentNotificationSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private MailerInterface $mailer,
         private UrlGeneratorInterface $urlGenerator,
+        private TranslatorInterface $translator,
         private string $sender,
     ) {
     }
@@ -35,28 +38,28 @@ final readonly class CommentNotificationSubscriber implements EventSubscriberInt
             return;
         }
 
-        $linkToPost = $this->urlGenerator->generate(
+        // Generate URL to post
+        $postUrl = $this->urlGenerator->generate(
             'blog_post',
             ['slug' => $post->getSlug()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        $subject = sprintf('New comment on "%s"', $post->getTitle());
+        // Use translator for email subject
+        $subject = $this->translator->trans('notification.comment_created', [
+            'postTitle' => $post->getTitle(),
+        ]);
 
-        $body = <<<EMAIL_BODY
-            A new comment has been posted on your post "{$post->getTitle()}".
-
-            Author: {$comment->getAuthor()?->getFullName()}
-            Content: {$comment->getContent()}
-
-            View the post: {$linkToPost}
-            EMAIL_BODY;
-
-        $email = (new Email())
-            ->from($this->sender)
-            ->to($post->getAuthor()->getEmail() ?? '')
+        $email = (new TemplatedEmail())
+            ->from(Address::create($this->sender))
+            ->to(new Address($post->getAuthor()->getEmail()))
             ->subject($subject)
-            ->text($body);
+            ->htmlTemplate('emails/comment_notification.html.twig')
+            ->context([
+                'post' => $post,
+                'comment' => $comment,
+                'postUrl' => $postUrl,
+            ]);
 
         try {
             $this->mailer->send($email);

@@ -149,6 +149,9 @@ help.page: 'Page'
 # Errors
 error.comment_validation_failed: 'There was a problem with your comment:'
 
+# Notifications
+notification.comment_created: 'New comment on "{postTitle}"'
+
 # HTTP Error Pages
 http_error:
     name: 'Error'

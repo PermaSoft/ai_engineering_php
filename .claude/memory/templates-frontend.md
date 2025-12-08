@@ -1167,3 +1167,192 @@ Blog partials are in `templates/blog/`:
 - **Testable in isolation** - Each partial can be tested independently
 - **Reusable across templates** - Use in multiple places
 - **Clear separation of concerns** - Each partial has a single responsibility
+
+---
+
+## Internationalization (i18n)
+
+Complete multi-language support with 30 locales.
+
+### Supported Locales
+
+**30 Languages:**
+- ar (Arabic), bg (Bulgarian), bs (Bosnian), ca (Catalan)
+- cs (Czech), de (German), en (English), es (Spanish)
+- eu (Basque), fr (French), hr (Croatian), id (Indonesian)
+- it (Italian), ja (Japanese), lt (Lithuanian), ne (Nepali)
+- nl (Dutch), pl (Polish), pt_BR (Brazilian Portuguese), ro (Romanian)
+- ru (Russian), sk (Slovak), sl (Slovenian), sq (Albanian)
+- sr_Cyrl (Serbian Cyrillic), sr_Latn (Serbian Latin)
+- tr (Turkish), uk (Ukrainian), vi (Vietnamese), zh_CN (Chinese Simplified)
+
+**Configuration:**
+- `config/services.yaml`: `app.supported_locales` parameter (pipe-separated)
+- `config/routes.yaml`: `_locale` requirement references parameter
+- All routes prefixed with `/{_locale}/`
+
+### Language Selector Component
+
+**Location**: `templates/default/_language_selector.html.twig`
+
+**Features:**
+- Dropdown with all 30 languages in native names
+- Globe icon (SVG)
+- Shows current language
+- Highlights active language
+- Preserves current route and parameters when switching
+- Bootstrap dropdown styling
+- Scrollable menu (max-height: 400px)
+
+**Usage in base template:**
+```twig
+{# Language Selector #}
+{% include 'default/_language_selector.html.twig' %}
+```
+
+**Route preservation:**
+```twig
+{{ path(app.request.attributes.get('_route'),
+        app.request.attributes.get('_route_params')|merge({_locale: code})) }}
+```
+
+### RTL (Right-to-Left) Support
+
+**Enabled for**: Arabic (ar)
+
+**Base template HTML tag:**
+```twig
+<html lang="{{ app.request.locale }}"
+      dir="{% if app.request.locale == 'ar' %}rtl{% else %}ltr{% endif %}">
+```
+
+**RTL CSS**: `assets/styles/_rtl.scss`
+
+**Includes:**
+- Direction and text-align reversal
+- Float direction reversal (start/end)
+- Margin and padding reversal (ms/me, ps/pe)
+- Dropdown menu positioning
+- Navbar alignment
+- Border side reversal
+
+**Import in `assets/styles/app.scss`:**
+```scss
+@import 'rtl';
+```
+
+### Translation Files
+
+**Format**: XLIFF 1.2 (`.xlf`)
+
+**Location**: `translations/messages+intl-icu.{locale}.xlf`
+
+**Structure:**
+```xml
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" target-language="en" datatype="plaintext">
+        <body>
+            <trans-unit id="menu.homepage">
+                <source>menu.homepage</source>
+                <target>Blog</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
+```
+
+**Translation domains:**
+- `messages`: UI text, labels, actions, titles
+- No separate domain for validators (uses messages)
+
+### Locale Redirection
+
+**Event Subscriber**: `RedirectToPreferredLocaleSubscriber`
+
+**Behavior:**
+- Intercepts requests to root URL (`/`)
+- Reads `Accept-Language` header
+- Redirects to `/{locale}/` based on browser preference
+- Falls back to default locale (`%kernel.default_locale%`)
+
+**Implementation:**
+```php
+public function onKernelRequest(RequestEvent $event): void
+{
+    $request = $event->getRequest();
+
+    if (!$event->isMainRequest() || $request->getPathInfo() !== '/') {
+        return;
+    }
+
+    $preferredLocale = $request->getPreferredLanguage(self::SUPPORTED_LOCALES);
+    $locale = $preferredLocale ?? $this->defaultLocale;
+
+    $response = new RedirectResponse(
+        $this->urlGenerator->generate('homepage', ['_locale' => $locale])
+    );
+
+    $event->setResponse($response);
+}
+```
+
+### Translated Email Notifications
+
+**CommentNotificationSubscriber** uses `TranslatorInterface`:
+
+```php
+public function __construct(
+    private MailerInterface $mailer,
+    private UrlGeneratorInterface $urlGenerator,
+    private TranslatorInterface $translator,
+    private string $sender,
+) {
+}
+
+// Use translator for email subject
+$subject = $this->translator->trans('notification.comment_created', [
+    'postTitle' => $post->getTitle(),
+]);
+```
+
+**Email template**: Uses `TemplatedEmail` with context
+
+### Translation Key Categories
+
+**Menu items**: `menu.*`
+- `menu.homepage`, `menu.admin`, `menu.profile`, etc.
+
+**Titles**: `title.*`
+- `title.blog_index`, `title.edit_post`, etc.
+
+**Actions**: `action.*`
+- `action.create`, `action.edit`, `action.save`, etc.
+
+**Labels**: `label.*`
+- `label.title`, `label.author`, `label.tags`, etc.
+
+**Help text**: `help.*`
+- `help.post_summary`, `help.login_to_comment`, etc.
+
+**Flash messages**: `{entity}.{action}_successfully`
+- `post.created_successfully`, `user.updated_successfully`, etc.
+
+**HTTP errors**: `http_error_*`
+- `http_error_403.description`, `http_error_404.title`, etc.
+
+**Notifications**: `notification.*`
+- `notification.comment_created`
+
+### Best Practices
+
+1. **Always use translation keys** - Never hardcode text
+2. **Use descriptive key names** - Follow namespace pattern
+3. **Pass parameters for dynamic content** - `{count}`, `{postTitle}`, etc.
+4. **Test with multiple locales** - Especially RTL languages
+5. **Keep translations in sync** - Update all locale files when adding keys
+6. **Use ICU message format** - For pluralization and advanced formatting
+7. **Set locale in routes** - Use `{_locale}` parameter
+8. **Preserve locale when generating URLs** - Pass `_locale` parameter
+
+---

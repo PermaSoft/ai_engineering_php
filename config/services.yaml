@@ -6,7 +6,7 @@
 parameters:
     app.locale: 'en'
     app.notifications.email_sender: anonymous@example.com
-    app.supported_locales: 'en|fr|de|es|cs|nl|ru|uk|ro|pt_BR|pl|it|ja|id|ca|sl|hr|zh_CN|bg|tr|lt'
+    app.supported_locales: 'en|ar|bg|bs|ca|cs|de|es|eu|fr|hr|id|it|ja|lt|ne|nl|pl|pt_BR|ro|ru|sk|sl|sq|sr_Cyrl|sr_Latn|tr|uk|vi|zh_CN'
 
 services:
     # default configuration for services in *this* file
@@ -27,6 +27,10 @@ services:
     App\EventSubscriber\CommentNotificationSubscriber:
         arguments:
             $sender: '%app.notifications.email_sender%'
+
+    App\EventSubscriber\RedirectToPreferredLocaleSubscriber:
+        arguments:
+            $defaultLocale: '%kernel.default_locale%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

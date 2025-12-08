@@ -1,0 +1,66 @@
+/*
+ * Right-to-Left (RTL) support for Arabic, Hebrew, Farsi, etc.
+ */
+
+html[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+
+    // Reverse float directions
+    .float-start {
+        float: right !important;
+    }
+
+    .float-end {
+        float: left !important;
+    }
+
+    // Reverse text alignment
+    .text-start {
+        text-align: right !important;
+    }
+
+    .text-end {
+        text-align: left !important;
+    }
+
+    // Reverse margins
+    .ms-auto {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+    }
+
+    .me-auto {
+        margin-right: 0 !important;
+        margin-left: auto !important;
+    }
+
+    // Reverse padding
+    .ps-3 {
+        padding-left: 0 !important;
+        padding-right: 1rem !important;
+    }
+
+    .pe-3 {
+        padding-right: 0 !important;
+        padding-left: 1rem !important;
+    }
+
+    // Dropdown menus
+    .dropdown-menu-end {
+        right: auto !important;
+        left: 0 !important;
+    }
+
+    // Navbar
+    .navbar-nav {
+        margin-left: 0;
+        margin-right: auto;
+    }
+
+    // Borders
+    .border-start {
+        border-left: 0 !important;
+        border-right: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+    }
+}

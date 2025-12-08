@@ -140,9 +140,6 @@ then we need to stop, clear context and rerun this prompt
 ```
 
 
-
-
-
 Symfony Demo Application
 ========================
 
