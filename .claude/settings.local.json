@@ -9,7 +9,9 @@
       "Bash(php-config:*)",
       "Bash(brew list:*)",
       "Bash(brew info:*)",
-      "Bash(brew install:*)"
+      "Bash(brew install:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git ls-tree:*)"
     ],
     "deny": [],
     "ask": []

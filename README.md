@@ -204,6 +204,15 @@ The language menu works in login page and in blog post, but it does not work any
 ```
 
 Yeah, it works now.
+let's compare again:
+```prompt-claude
+I implemented the official symfony demo application in the git banch `walkthrought` and I build packmind's standards from it.
+In the other branch `rebuilding`, I asked `claude code` to rebuild the demo application from functionnal specifications and from packmind standards.
+Can you ultre think the comparison beetwen this two branches' head ?
+How far the rebuilding is from the walkthrought in all dimensions: functionnality, code guidelines, security, design system, etc.
+can you write this comparison in a file, that may include mermaid shcema, infographics, if usefull.
+```
+The diff file is generated here: [ULTRA_DEEP_BRANCH_COMPARISON.md](ULTRA_DEEP_BRANCH_COMPARISON.md)
 
 
 
