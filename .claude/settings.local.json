@@ -4,14 +4,22 @@
       "mcp__packmind__list_standards",
       "mcp__packmind__list_packages",
       "mcp__packmind__create_standard",
-      "mcp__packmind__save_standard"
+      "mcp__packmind__save_standard",
+      "mcp__packmind__list_recipes",
+      "mcp__packmind__get_standard_details",
+      "mcp__packmind__save_recipe",
+      "Bash(grep:*)",
+      "mcp__packmind__onboarding",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
   },
   "statusLine": {
-      "type": "command",
-      "command": "npx -y ccusage statusline",
-      "padding": 0
-    }
+    "type": "command",
+    "command": "npx -y ccusage statusline",
+    "padding": 0
+  }
 }

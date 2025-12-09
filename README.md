@@ -39,6 +39,16 @@ The current project is the Symfony's official demo application, and I added pack
   To avoid context pollution, thins that are not always needed can be referenced from claude.md, detailled in an other file, so in following prompt, you may read them only on demand, like partial disclosure pattern.
 ```
 
+Let's go further with packmind:
+```prompt-claude
+Can you onboard this project in packmind ?
+It is the official Symfony's demo application from https://github.com/symfony/demo (this repo has coding git history, not the local one), it promote best practices defined at
+https://symfony.com/doc/current/best_practices.html and whole documentation is at https://symfony.com/doc.
+In the end, I want good up to date standards and recipes for common evolution (e.g. add a button/action) and for common features addition (e.g. new web page, new UI component, etc.)
+```
+```prompt-claude
+In all functionnalities you find in the website, can you provide all of them with help of recipes ?
+```
 
 ---
 
