@@ -2,6 +2,39 @@
 
 This directory contains references to all 19 Symfony recipes available in Packmind.
 
+## Slash Commands
+
+All recipes are available as Claude Code slash commands. Use them by typing:
+
+| Command | Recipe |
+|---------|--------|
+| `/recipe-crud-controller` | Add CRUD controller actions |
+| `/recipe-entity` | Create Doctrine entities with relationships |
+| `/recipe-form-type` | Create form types |
+| `/recipe-page` | Add new pages with templates |
+| `/recipe-console-command` | Create console commands |
+| `/recipe-voter` | Add authorization voters |
+| `/recipe-event-subscriber` | Create event subscribers |
+| `/recipe-functional-test` | Write functional tests |
+| `/recipe-live-search` | Add Symfony UX live search |
+| `/recipe-rss-feed` | Create RSS feeds |
+| `/recipe-comment-system` | Add comment functionality |
+| `/recipe-authentication` | Implement login authentication |
+| `/recipe-pagination` | Add pagination to lists |
+| `/recipe-i18n` | Add multi-language support |
+| `/recipe-tag-system` | Implement tagging |
+| `/recipe-flash-messages` | Add flash message notifications |
+| `/recipe-custom-form-field` | Create custom form field types |
+| `/recipe-user-profile` | Add user profile management |
+| `/recipe-data-fixtures` | Create test data fixtures |
+
+**Usage example:**
+```
+/recipe-entity Product with name, price, and category relationship
+```
+
+---
+
 ## Recipe Categories
 
 ### Core Framework (5 recipes)

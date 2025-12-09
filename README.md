@@ -49,12 +49,18 @@ In the end, I want good up to date standards and recipes for common evolution (e
 ```prompt-claude
 In all functionnalities you find in the website, can you provide all of them with help of recipes ?
 ```
-
-> did you used mcp packmind's tool called onboarding ?
-> I would like you to use the tool to seek improvements on either this project data (documentation, memory files, etc.) or existing standard and rules by any analyser they suggest.
-
+```prompt-claude
+did you used mcp packmind's tool called onboarding ?
+```
+```prompt-claude
+I would like you to use the tool to seek improvements on either this project data (documentation, memory files, etc.) or existing standard and rules by any analyser they suggest.
+```
+```prompt-claude
 Can you group all standards and recipes into logical groups, then distribute all of them in this current project ?
----
+```
+```prompt-claude
+please make each recipe from packmind's symfony package runnable from a command
+```
 
 Symfony Demo Application
 ========================
