@@ -12,7 +12,11 @@
       "mcp__packmind__onboarding",
       "Bash(cat:*)",
       "Bash(find:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "mcp__packmind__get_package_details",
+      "WebFetch(domain:app.packmind.com)",
+      "Bash(packmind-cli pull:*)",
+      "mcp__packmind__get_recipe_details"
     ],
     "deny": [],
     "ask": []
